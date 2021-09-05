@@ -1,10 +1,11 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import React from "react";
 import Homepage from "../components/Home/Home";
+import Head from "next/head";
+import styles from "../public/static/empty.module.css";
 
-export default function Home() {
+function home() {
   return (
-    <div className={styles.container}>
+    <div className={styles.main}>
       <Head>
         <title>Home</title>
         <meta name="description" content="Dvi kosulje ez" />
@@ -14,3 +15,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default home;
