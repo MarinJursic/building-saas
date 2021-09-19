@@ -17,18 +17,18 @@
       place-content: space-around start;
 
       svg {
-        margin-left: 1em;
+        margin-left: 0.6em;
       }
 
       h5 {
         font-weight: 400;
-        font-size: 1.05em;
+        font-size: 1em;
         margin-right: auto;
       }
     }
 
     .bar {
-      width: 90%;
+      width: 80%;
       display: flex;
       align-items: center !important;
       place-content: space-between;

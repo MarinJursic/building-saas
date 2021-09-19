@@ -37,6 +37,32 @@ export default function Sidebar() {
     }
   }, [colormode]);
 
+  const projects = [
+    {
+      imgSrc:
+        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
+      open: false,
+    },
+    {
+      imgSrc:
+        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
+      open: false,
+    },
+    {
+      imgSrc:
+        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
+      open: false,
+    },
+    {
+      imgSrc:
+        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
+      open: false,
+    },
+  ];
+
+  const opened = Array(projects.length);
+  opened.fill(false);
+
   return (
     <div
       className={styles.sidebar}
@@ -47,7 +73,7 @@ export default function Sidebar() {
         } solid`,
       }}
     >
-      <div>
+      <div className={styles.topIcons}>
         <h1 style={{ color: logoColor }}>AU</h1>
         <Link href="/home">
           <a
@@ -111,6 +137,87 @@ export default function Sidebar() {
           </a>
         </Link>
       </div>
+      <div className={styles.projects}>
+        {projects.map((project, i) => (
+          <div className={styles.project} key={i}>
+            <img
+              src={project.imgSrc}
+              onClick={() => (opened[i] = !opened[i])}
+            />
+            {opened[i] && (
+              <div className={styles.dropdown}>
+                <Link href="/home">
+                  <a
+                    className={
+                      active === "/" || active === "/home"
+                        ? styles.buttonBoxActive
+                        : styles.buttonBox
+                    }
+                    onClick={() => {
+                      setActive("/home");
+                    }}
+                  >
+                    <BiHomeAlt
+                      color={fontColor}
+                      className={styles.button}
+                      size="1.5rem"
+                    />
+                  </a>
+                </Link>
+                <Link href="/tasks">
+                  <a
+                    className={
+                      active === "/tasks"
+                        ? styles.buttonBoxActive
+                        : styles.buttonBox
+                    }
+                    style={{ backgroundColor: bgColor }}
+                    onClick={() => setActive("/tasks")}
+                  >
+                    <BsListTask
+                      color={fontColor}
+                      className={styles.button}
+                      size="1.5rem"
+                    />
+                  </a>
+                </Link>
+                <Link href="/gantt">
+                  <a
+                    className={
+                      active === "/gantt"
+                        ? styles.buttonBoxActive
+                        : styles.buttonBox
+                    }
+                    onClick={() => setActive("/gantt")}
+                  >
+                    <GoGraph
+                      color={fontColor}
+                      className={styles.button}
+                      size="1.5rem"
+                    />
+                  </a>
+                </Link>
+                <Link href="/calendar">
+                  <a
+                    className={
+                      active === "/calendar"
+                        ? styles.buttonBoxActive
+                        : styles.buttonBox
+                    }
+                    onClick={() => setActive("/calendar")}
+                  >
+                    <BiCalendarAlt
+                      color={fontColor}
+                      className={styles.button}
+                      size="1.5rem"
+                    />
+                  </a>
+                </Link>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
       <div
         style={{
           display: "flex",
@@ -118,6 +225,7 @@ export default function Sidebar() {
           alignItems: "center",
           justifyContent: "space-between",
         }}
+        className={styles.switchAndPfp}
       >
         <div
           onClick={() => {
@@ -156,6 +264,7 @@ export default function Sidebar() {
             </svg>
           )}
         </div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" />
       </div>
     </div>
   );

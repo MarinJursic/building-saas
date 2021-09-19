@@ -1,8 +1,4 @@
-import {
-  ADD_ACTIVITIY,
-  DELETE_ACTIVITY,
-  SET_ACTIVE_ACTIVITY,
-} from "../actions/types";
+import { ADD_TASK, DELETE_TASK, SET_ACTIVE_TASK } from "../actions/types";
 import { v4 as uuid } from "uuid";
 
 export const addTask = (task) => (dispatch) => {
@@ -13,21 +9,21 @@ export const addTask = (task) => (dispatch) => {
   };
 
   dispatch({
-    type: ADD_Task,
+    type: ADD_TASK,
     payload: newTask,
   });
 };
 
 export const deleteTask = (id) => {
   return {
-    type: DELETE_Task,
+    type: DELETE_TASK,
     payload: id,
   };
 };
 
 export const setActiveTask = (Task) => {
   return {
-    type: SET_ACTIVE_Task,
+    type: SET_ACTIVE_TASK,
     payload: activity,
   };
 };

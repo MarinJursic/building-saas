@@ -40,7 +40,7 @@ function Home() {
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") save();
-    else if (e.keyCode === 27) cancel(); // Esc key
+    else if (e.keyCode === 27) setEditing(false); // Esc key
   };
 
   return (

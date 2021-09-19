@@ -21,19 +21,117 @@
 
     .dHeader {
       height: 75%;
-      padding: 2rem;
       display: flex;
       flex-direction: column;
 
-      .subheader {
+      .editHeader {
+        padding: 1rem;
+        padding-inline: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+        .editHeaderButtons {
+          display: flex;
+          align-items: center;
+        }
+
+        .editHeaderTitle {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 24px;
+          /* identical to box height, or 150% */
+
+          letter-spacing: 0.15px;
+
+          /* On Surface/Dark Content/High Emphasis */
+
+          color: #181d32;
+        }
+
+        .editHeaderCancel {
+          padding: 0.75rem 1.25rem;
+          outline: none;
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 14px;
+          line-height: 16px;
+          /* identical to box height, or 114% */
+
+          letter-spacing: 0.75px;
+
+          /* On Surface/Dark Content/Medium Emphasis */
+
+          color: rgba(24, 29, 50, 0.7);
+
+          border: 1px solid rgba(0, 0, 0, 0.25);
+          background-color: transparent;
+          border-radius: 12px;
+
+          &:hover {
+            cursor: pointer;
+            border-color: rgba(0, 0, 0, 0.5);
+          }
+        }
+
+        .editHeaderSaveBox {
+          display: flex;
+          align-items: center;
+          background-color: #3b7af7;
+          padding: 0.75rem 1.25rem;
+          border-radius: 12px;
+          margin-left: 0.5rem;
+
+          &:hover {
+            cursor: pointer;
+            background-color: darken(#3b7af7, 5%);
+          }
+
+          h1 {
+            margin-left: 0.5rem;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 16px;
+            /* identical to box height, or 114% */
+
+            letter-spacing: 0.75px;
+
+            /* On Surface/Light Content/High Emphasis */
+
+            color: #ffffff;
+          }
+        }
+      }
+
+      .subheader {
+        margin: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         svg {
           &:hover {
             cursor: pointer;
+          }
+        }
+
+        .editBtn {
+          &:hover {
+            path {
+              fill: indigo;
+            }
+          }
+
+          &:active {
+            path {
+              fill: lighten(indigo, 20%);
+            }
           }
         }
 
@@ -45,7 +143,9 @@
           }
 
           &:active {
-            color: darkred;
+            path {
+              fill: darkred;
+            }
           }
         }
 
@@ -73,6 +173,14 @@
           justify-content: space-between;
           margin-bottom: 1rem;
 
+          .addAssignee {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            padding-inline: 0.65rem;
+          }
+
           .details_imgs {
             width: 70%;
             display: grid;
@@ -95,6 +203,25 @@
                 margin-bottom: 0;
                 margin-left: -1.8px;
                 margin-top: -1.8px;
+              }
+
+              .editDetailsImgDetails {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                padding: 0.7rem;
+                border-radius: 0 0 1rem 1rem;
+                margin-top: 0;
+
+                svg {
+                  width: 1rem;
+                  margin-right: 1rem;
+                }
+
+                p {
+                  color: rgba(24, 29, 50, 0.7);
+                  font-size: 1rem;
+                }
               }
 
               .details_img_details {
@@ -122,13 +249,13 @@
             width: 70%;
             display: flex;
 
-            .img {
+            img {
               border: 1px solid rgba(0, 0, 0, 0.12);
               box-sizing: border-box;
               border-radius: 100px;
               height: 36px;
               width: 36px;
-              margin-right: 0.25rem;
+              margin-right: 0.5rem;
             }
           }
 
@@ -152,6 +279,61 @@
             width: 70%;
             display: flex;
 
+            .phase {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: 600;
+              font-size: 14px;
+              line-height: 16px;
+              /* identical to box height, or 114% */
+
+              letter-spacing: 0.75px;
+              color: white;
+
+              /* On Surface/Dark Content/High Emphasis */
+              border: 1px solid rgba(0, 0, 0, 0.1);
+              padding: 0.5rem;
+              padding-inline: 1.25rem;
+              border-radius: 15px;
+              margin-right: 0.25rem;
+            }
+
+            .addPhase {
+              display: flex;
+              align-items: center;
+              border: 1px solid rgba(0, 0, 0, 0.2);
+              padding-inline: 0.5rem;
+              border-radius: 50%;
+            }
+
+            .editProgressText {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: 600;
+              font-size: 14px;
+              line-height: 16px;
+              /* identical to box height, or 114% */
+
+              letter-spacing: 0.75px;
+
+              /* On Surface/Dark Content/Medium Emphasis */
+
+              color: rgba(24, 29, 50, 0.7);
+
+              padding: 0.75rem;
+              padding-inline: 1rem;
+              border-radius: 15px;
+              outline: none;
+              background-color: transparent;
+              border: 1px solid rgba(0, 0, 0, 0.25);
+              margin-right: 0.5rem;
+
+              &:hover {
+                cursor: pointer;
+                border: 1px solid rgba(0, 0, 0.25);
+              }
+            }
+
             .progressText {
               /* Button */
               font-family: Inter;
@@ -166,7 +348,6 @@
               /* On Surface/Dark Content/High Emphasis */
 
               color: white;
-              background-color: #fda076;
               padding: 0.75rem;
               padding-inline: 1rem;
               border-radius: 15px;
@@ -184,11 +365,59 @@
               letter-spacing: 0.75px;
 
               /* On Surface/Dark Content/High Emphasis */
-
-              color: white;
+              border: 1px solid rgba(0, 0, 0, 0.1);
               padding: 0.5rem;
               padding-inline: 1.25rem;
               border-radius: 15px;
+              margin-right: 0.25rem;
+
+              &:hover {
+                cursor: pointer;
+                border: 1px solid rgba(0, 0, 0, 0.5);
+              }
+            }
+          }
+
+          textarea {
+            outline: none;
+            resize: none;
+            width: 70%;
+            height: 10rem;
+            padding: 0.5rem;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 20px;
+            /* or 143% */
+            letter-spacing: 0.25px;
+            font-feature-settings: "tnum" on, "lnum" on;
+            /* On Surface/Dark Content/High Emphasis */
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #181d32;
+          }
+
+          .inputDate {
+            width: 70%;
+
+            input {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 14px;
+              line-height: 20px;
+              /* or 143% */
+              padding: 0.5rem 0.5rem;
+              border-radius: 10px;
+              border: 1px solid rgba(0, 0, 0, 0.1);
+              outline: none;
+              letter-spacing: 0.25px;
+              font-feature-settings: "tnum" on, "lnum" on;
+
+              /* On Surface/Dark Content/High Emphasis */
+
+              color: #181d32;
             }
           }
 
@@ -217,6 +446,19 @@
               align-items: center;
               margin-bottom: 1rem;
 
+              .checklistButtons {
+                width: 60%;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+              }
+
+              svg {
+                &:hover {
+                  cursor: pointer;
+                }
+              }
+
               h1 {
                 /* Body 2 */
                 margin-left: 0.5rem;
@@ -244,6 +486,51 @@
       height: 22%;
       background: #ffffff;
       box-shadow: inset 0px 1px 0px rgba(24, 29, 50, 0.12);
+      padding: 1.5rem;
+      padding-inline: 2rem;
+
+      .home {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 0.5rem;
+      }
+
+      .away {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 0.5rem;
+      }
+
+      .message {
+        display: flex;
+
+        .chatTexts {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 20px;
+          /* identical to box height, or 143% */
+
+          letter-spacing: 0.25px;
+
+          /* On Surface/Dark Content/High Emphasis */
+
+          color: #181d32;
+          padding: 1rem;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+          border-radius: 12px;
+        }
+
+        .DImage {
+          width: 30px;
+          height: 30px;
+          border: 1px solid rgba(24, 29, 50, 0.12);
+          border-radius: 100px;
+        }
+      }
     }
 
     .dInput {
@@ -773,13 +1060,173 @@
     user-select: none;
     height: 100%;
 
+    .black {
+      border: 2px solid #7ea6f5 !important;
+      background-color: #333949 !important;
+    }
+
     .blue {
       border: 2px solid #7ea6f5 !important;
       background-color: #eff4fe !important;
     }
 
+    .addTaskDisplay {
+      margin-bottom: 1rem;
+
+      .first {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        border: 1px solid transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .last {
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border: 1px solid transparent;
+      }
+
+      .taskContainerDisplay {
+        border: 2px solid #ffffff;
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        box-shadow: 0px 14px 31px rgba(0, 0, 0, 0.03),
+          0px 4.22059px 9.34559px rgba(0, 0, 0, 0.0195477),
+          0px 1.75302px 3.88168px rgba(0, 0, 0, 0.015),
+          0px 0.634032px 1.40393px rgba(0, 0, 0, 0.0104523);
+        padding: 1rem;
+        border: 1px solid transparent;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-inline: 2rem;
+
+        .taskBodyDisplay {
+          display: flex;
+          width: 50%;
+          align-items: center;
+
+          .buttonsDisplay {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            display: flex;
+            align-items: center;
+
+            .actionsDisplay {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 12rem;
+
+              .actionDisplay {
+                display: flex;
+                align-items: center;
+
+                h1 {
+                  margin: 0;
+                  margin-left: 0.75rem;
+                  /* Button */
+
+                  font-family: Inter;
+                  font-style: normal;
+                  font-weight: 600;
+                  font-size: 14px;
+                  line-height: 16px;
+                  /* identical to box height, or 114% */
+
+                  letter-spacing: 0.75px;
+
+                  /* On Surface/Dark Content/Medium Emphasis */
+
+                  color: rgba(24, 29, 50, 0.7);
+                }
+              }
+            }
+          }
+
+          .calendarDisplay {
+            margin-left: 1rem;
+            display: flex;
+            align-items: center;
+            padding-right: 1rem;
+            border-right: 1px solid rgba(0, 0, 0, 0.25);
+
+            .dateDisplay {
+              /* Body 2 */
+              margin: 0;
+              margin-left: 0.5rem;
+              font-family: Inter;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 16px;
+              line-height: 20px;
+              /* identical to box height, or 143% */
+
+              letter-spacing: 0.25px;
+              font-feature-settings: "tnum" on, "lnum" on;
+
+              /* On Surface/Dark Content/Medium Emphasis */
+
+              color: rgba(24, 29, 50, 0.7);
+            }
+          }
+        }
+
+        .taskHeaderDisplay {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 2rem;
+          width: 85%;
+          border-right: 1px solid rgba(0, 0, 0, 0.15);
+
+          .taskTitle {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 24px;
+            line-height: 24px;
+            /* identical to box height, or 171% */
+
+            letter-spacing: 0.1px;
+
+            /* On Surface/Dark Content/High Emphasis */
+
+            color: #181d32;
+          }
+
+          .headerInfo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            div {
+              border-radius: 10px;
+              padding: 4px 8px;
+              h1 {
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 12px;
+                line-height: 16px;
+                /* identical to box height, or 160% */
+                letter-spacing: 1px;
+                text-transform: capitalize;
+                /* On Surface/Light Content/High Emphasis */
+                color: #ffffff;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .colorChange {
+      border-color: transparent;
+      background: #323339 !important;
+    }
+
     .taskContainer {
-      border: 2px solid #ffffff;
+      border: 2px solid transparent;
       display: flex;
       flex-direction: column;
       background: #ffffff;
@@ -907,6 +1354,52 @@
 
                 color: rgba(24, 29, 50, 0.7);
               }
+            }
+          }
+        }
+      }
+
+      .taskHeaderDisplay {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 2rem;
+        width: 50%;
+
+        .taskTitle {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          /* identical to box height, or 171% */
+
+          letter-spacing: 0.1px;
+
+          /* On Surface/Dark Content/High Emphasis */
+
+          color: #181d32;
+        }
+
+        .headerInfo {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          div {
+            border-radius: 10px;
+            padding: 4px 8px;
+            h1 {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: 600;
+              font-size: 12px;
+              line-height: 16px;
+              /* identical to box height, or 160% */
+              letter-spacing: 1px;
+              text-transform: capitalize;
+              /* On Surface/Light Content/High Emphasis */
+              color: #ffffff;
             }
           }
         }
@@ -1069,6 +1562,10 @@
     .container {
       width: 32%;
       height: 100%;
+
+      .addTaskIconsDisplay {
+        display: none;
+      }
 
       .addTaskIcons {
         display: flex;

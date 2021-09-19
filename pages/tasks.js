@@ -5,7 +5,7 @@ import styles from "../public/static/empty.module.css";
 
 function tasks() {
   return (
-    <div className={styles.main}>
+    <div className={styles.main} style={{ height: "100%" }}>
       <Head>
         <title>Tasks</title>
         <meta name="description" content="Dvi kosulje ez" />
@@ -14,6 +14,16 @@ function tasks() {
       <Kanban />
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 250);
+  });
+
+  return {
+    props: {},
+  };
 }
 
 export default tasks;

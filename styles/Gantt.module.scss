@@ -1,5 +1,15 @@
-.gantt {
+.main {
+  height: 100%;
   width: 100%;
-  height: 100vh;
-  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+
+  .body {
+    height: 100%;
+    display: flex;
+
+    div {
+      overflow: hidden !important;
+    }
+  }
 }

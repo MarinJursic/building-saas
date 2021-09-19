@@ -163,7 +163,7 @@ function Activity({ activity, openedDetails }) {
           </motion.svg>
         </div>
       </div>
-      <p>{activity.description}</p>
+      <p>{activity.shortDescription}</p>
       <div className={styles.attachments}>
         <svg
           width="15"

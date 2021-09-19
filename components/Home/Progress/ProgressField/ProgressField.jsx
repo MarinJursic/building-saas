@@ -54,8 +54,8 @@ function ProgressField({ field }) {
           <h5 style={{ marginLeft: field.isChild && "1em" }}>{field.title}</h5>
           {field.children && field.children.length > 0 && (
             <svg
-              width="13"
-              height="9"
+              width="11"
+              height="7"
               viewBox="0 0 10 6"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ function ProgressField({ field }) {
             isLabelVisible={false}
             bgColor={field.isChild ? "#c67aff" : "#7a9eff"}
             baseBgColor={field.isChild ? childProgressBgColor : progressBgColor}
-            width={"35em"}
+            width={"32em"}
             height={"0.55em"}
           />
         </div>

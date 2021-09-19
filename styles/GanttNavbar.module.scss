@@ -1,4 +1,8 @@
-.calnav_dark {
+.navbar_dark {
+  width: 100%;
+  height: 7.5%;
+  display: flex;
+  user-select: none;
   background: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 21.29%,
@@ -12,13 +16,12 @@
   background-size: 100% !important;
 }
 
-.calnav {
-  user-select: none;
-  display: flex;
-  align-items: center;
-  place-content: space-between;
-  padding: 1.18rem;
+.navbar {
   width: 100%;
+  height: 7.5%;
+  padding-inline: 1.5rem;
+  display: flex;
+  user-select: none;
   background: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 21.29%,
@@ -31,9 +34,62 @@
   background-repeat: no-repeat;
   background-size: 100%;
 
+  .right {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .options {
+      display: flex;
+      align-items: center;
+      width: 15%;
+
+      .settings {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .export {
+        /* Button */
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 12px;
+        padding: 0.75rem;
+        margin-left: 1rem;
+        padding-inline: 1.25rem;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+        /* identical to box height, or 114% */
+
+        letter-spacing: 0.75px;
+
+        /* On Surface/Dark Content/Medium Emphasis */
+
+        color: rgba(24, 29, 50, 0.7);
+      }
+    }
+
+    .viewSlider {
+      display: flex;
+      align-items: center;
+      width: 30%;
+
+      h2 {
+        font-size: 16px;
+        margin-right: 1.5rem;
+        color: black;
+      }
+    }
+  }
+
   .address {
     display: flex;
     align-items: center;
+    width: 50%;
 
     svg {
       margin-left: 2rem;
@@ -122,131 +178,6 @@
         svg {
           margin-right: 0.5rem;
         }
-      }
-    }
-  }
-
-  .date {
-    margin-left: -8rem;
-    display: flex;
-    align-items: center;
-    position: relative;
-
-    p {
-      margin-right: 1.7rem;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 16px;
-      letter-spacing: 0.75px;
-      padding: 0.35rem 1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      opacity: 0.6;
-    }
-
-    svg {
-      margin-right: 1.7rem;
-      width: 0.75rem;
-      cursor: pointer;
-    }
-
-    h4 {
-      width: 10rem;
-      margin-left: 12rem;
-      position: absolute;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-    }
-  }
-
-  .search_sw {
-    display: flex;
-    align-items: center;
-
-    .search_input {
-      display: flex;
-      align-items: center;
-      margin-right: -1rem;
-
-      input {
-        background-color: transparent;
-        margin-right: 1rem;
-        width: 20rem;
-        padding: 0.1rem 1rem;
-        outline: none;
-        border: none;
-        font-size: 1rem;
-      }
-
-      .search_icon {
-        margin-right: 0;
-        cursor: pointer;
-
-        &:hover {
-          path {
-            fill: #7a9eff;
-          }
-        }
-      }
-
-      .cancel_icon {
-        margin-right: 0;
-        cursor: pointer;
-
-        &:hover {
-          path {
-            fill: red;
-          }
-        }
-      }
-    }
-
-    svg {
-      width: 1.1rem;
-      margin-right: 1.5rem;
-      cursor: pointer;
-
-      &:hover {
-        path {
-          fill: #7a9eff;
-        }
-      }
-    }
-
-    .switch {
-      display: flex;
-      align-items: center;
-      padding: 0.4rem 1rem;
-      border-radius: 0.5rem;
-      margin-right: 1rem;
-      position: relative;
-
-      .sw_active_box {
-        position: absolute;
-        width: 50%;
-        height: 100%;
-        border: 1px solid rgba(0, 0, 0, 1);
-        border-radius: 0.5rem;
-        left: 0;
-      }
-
-      .sw_month {
-        margin-right: 2rem;
-      }
-
-      p {
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 16px;
-        letter-spacing: 0.75px;
-        opacity: 0.6;
-        cursor: pointer;
-      }
-
-      .sw_active {
-        opacity: 1;
       }
     }
   }

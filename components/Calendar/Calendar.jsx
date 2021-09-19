@@ -12,16 +12,45 @@ function Calendar() {
   const dispatch = useDispatch();
   const colormode = useSelector((state) => state.color.colormode);
 
+  const [mode, setMode] = useState("month");
+
   const [bgColor, setBgColor] = useState("white");
   const [fontColor, setFontColor] = useState("black");
+  const [borderColor, setBorderColor] = useState("0, 0, 0,");
+
+  const [scrollUp, setScrollUp] = useState(0);
+  const [scrollDown, setScrollDown] = useState(0);
+  const [minScroll, setMinScroll] = useState(1);
+  const [scrollTimeDiff, setScrollTimeDiff] = useState(0);
+
+  const [direction, setDirection] = useState(0);
+  const [updateDate, setUpdateDate] = useState(0);
+
+  const [FUexpansions, setFUexpansions] = useState(0);
+  const [expansionAdd] = useState(3);
+  const [expansions, setExpansions] = useState({
+    0: "0rem",
+    1: "0rem",
+    2: "0rem",
+    3: "0rem",
+    4: "0rem",
+    5: "0rem",
+  });
+
+  useEffect(() => {
+    updateMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bgColor, fontColor, borderColor]);
 
   useEffect(() => {
     if (colormode === "light") {
       setBgColor("white");
       setFontColor("black");
+      setBorderColor("0, 0, 0,");
     } else {
       setBgColor("#323339");
       setFontColor("white");
+      setBorderColor("255, 255, 255,");
     }
   }, [colormode]);
 
@@ -39,13 +68,33 @@ function Calendar() {
       description: "Foundation • Not Started",
     },
     {
-      startDay: 29,
-      endDay: 30,
+      startDay: 3,
+      endDay: 9,
       startMonth: 8,
       endMonth: 8,
       startYear: 2021,
       endYear: 2021,
-      title: "from 29 to 30",
+      title: "from 3 to 9",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 3,
+      endDay: 9,
+      startMonth: 8,
+      endMonth: 8,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 3 to 9",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 4,
+      endDay: 7,
+      startMonth: 8,
+      endMonth: 8,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 4 to 7",
       description: "Foundation • Not Started",
     },
     {
@@ -59,13 +108,13 @@ function Calendar() {
       description: "Foundation • Not Started",
     },
     {
-      startDay: 9,
-      endDay: 12,
+      startDay: 4,
+      endDay: 5,
       startMonth: 8,
       endMonth: 8,
       startYear: 2021,
       endYear: 2021,
-      title: "from 9 to 12",
+      title: "from 4 to 5",
       description: "Foundation • Not Started",
     },
     {
@@ -76,6 +125,126 @@ function Calendar() {
       startYear: 2021,
       endYear: 2021,
       title: "from 13 to 28",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 14,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 14 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 13,
+      endDay: 28,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 13 to 28",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 12,
+      endDay: 21,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 12 to 21",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
+      description: "Foundation • Not Started",
+    },
+    {
+      startDay: 20,
+      endDay: 23,
+      startMonth: 9,
+      endMonth: 9,
+      startYear: 2021,
+      endYear: 2021,
+      title: "from 20 to 23",
       description: "Foundation • Not Started",
     },
   ];
@@ -130,9 +299,9 @@ function Calendar() {
     takenRangePairs.slice(0, i).forEach((takenRangePair) => {
       if (
         (currRangePair[0] >= takenRangePair[0] &&
-          currRangePair[0] < takenRangePair[1]) ||
+          currRangePair[0] <= takenRangePair[1]) ||
         (currRangePair[1] >= takenRangePair[0] &&
-          currRangePair[1] < takenRangePair[1])
+          currRangePair[1] <= takenRangePair[1])
       ) {
         count++;
       }
@@ -146,14 +315,41 @@ function Calendar() {
   const [daysInMonth, setDaysInMonth] = useState(getDaysInMonth());
   const [month, setMonth] = useState([]);
 
-  const updateMonth = (firstDay, daysInMonth) => {
+  const updateMonth = () => {
     const days = [];
+
+    if (mode === "week") {
+      [...Array(14 * 7).keys()].map((i) =>
+        days.push(
+          <div
+            className={styles.day}
+            style={{
+              borderTop: `1px solid rgba(${borderColor} 0.3)`,
+              borderRight: `1px solid rgba(${borderColor} 0.3)`,
+            }}
+          ></div>
+        )
+      );
+
+      setMonth(days);
+
+      return;
+    }
 
     // Push a few days from the end of last month to the start of the calendar if needed
     [...Array(firstDay).keys()].map((i) =>
       days.push(
         <div className={styles.day}>
-          <p style={{ color: "rgba(0, 0, 0, 0.4)" }}>
+          <p
+            style={{
+              color: fontColor,
+              opacity: "0.4",
+              borderTop: `1px solid rgba(${borderColor} 0.5)`,
+              borderRight: `1px solid rgba(${borderColor} ${
+                i === firstDay - 1 ? "0.5" : "0.2"
+              })`,
+            }}
+          >
             {getDaysInMonth(prevMonth(), year) - firstDay + i}
           </p>
         </div>
@@ -164,11 +360,20 @@ function Calendar() {
     [...Array(daysInMonth).keys()].map((i) =>
       days.push(
         <div className={styles.day}>
-          {i === today.getDate() &&
+          {i === today.getDate() - 1 &&
             monthIndex === today.getMonth() &&
             year === today.getFullYear() && (
-              <div className={styles.today}>
-                <p>
+              <div
+                className={styles.today}
+                style={{ backgroundColor: fontColor }}
+              >
+                <p
+                  style={{
+                    borderRight: `1px solid rgba(${borderColor} 0.2)`,
+                    borderTop: `1px solid rgba(${borderColor} 0.2)`,
+                    color: bgColor,
+                  }}
+                >
                   {i === 0
                     ? `${allMonths[monthIndex].substring(0, 3)} ${i + 1}`
                     : i + 1}
@@ -177,13 +382,17 @@ function Calendar() {
             )}
           <p
             style={{
+              color: fontColor,
               opacity: 1,
+              borderRight: `1px solid rgba(${borderColor} 0.2)`,
+              borderTop: `1px solid rgba(${borderColor} 0.2)`,
             }}
           >
             {i === 0
               ? `${allMonths[monthIndex].substring(0, 3)} ${i + 1}`
               : i + 1}
           </p>
+          {getTasksInDay(i + 1)}
         </div>
       )
     );
@@ -192,7 +401,16 @@ function Calendar() {
     [...Array(42 - daysInMonth - firstDay).keys()].map((i) =>
       days.push(
         <div className={styles.day}>
-          <p style={{ color: "rgba(0, 0, 0, 0.4)" }}>
+          <p
+            style={{
+              color: fontColor,
+              opacity: "0.4",
+              borderRight: `1px solid rgba(${borderColor} 0.2)`,
+              borderTop: `1px solid rgba(${borderColor} ${
+                i < 7 ? "0.5" : "0.2"
+              })`,
+            }}
+          >
             {`${allMonths[nextMonth()].substring(0, 3)} ${i + 1}`}
           </p>
         </div>
@@ -200,6 +418,98 @@ function Calendar() {
     );
 
     setMonth(days);
+  };
+
+  const getWeekIndex = (day, month) => {
+    let weekIndex;
+
+    // Get week index
+    if (month === monthIndex - 1) weekIndex = 0;
+    else if (month === monthIndex + 1) {
+      weekIndex = Math.floor(
+        (firstDay + getDaysInMonth(monthIndex) + day - 1) / 7
+      );
+    } else {
+      weekIndex = Math.floor((firstDay + day - 1) / 7);
+    }
+
+    return weekIndex;
+  };
+
+  // Update current month calendar
+  useEffect(() => {
+    updateMonth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstDay, daysInMonth, FUexpansions, mode]);
+
+  const handleWeekExpansion = (weekIndex, count, close = false) => {
+    if (close) count = 2;
+
+    const tempExpansions = expansions;
+    tempExpansions[weekIndex] = `${(count - 2) * expansionAdd}rem`;
+    setExpansions(tempExpansions);
+    setFUexpansions(FUexpansions + 1);
+  };
+
+  const getTasksInDay = (day) => {
+    let count = 0;
+
+    allTasks.forEach((task) => {
+      if (task.startDay <= day && day < task.endDay) {
+        if (
+          task.startMonth === monthIndex + 1 ||
+          task.endMonth === monthIndex + 1
+        ) {
+          count++;
+        }
+      }
+    });
+
+    if (count > 2) {
+      const weekIndex = getWeekIndex(day, month);
+
+      if (expansions[weekIndex] === "0rem") {
+        return (
+          <h6
+            style={{ color: fontColor }}
+            onClick={() => handleWeekExpansion(weekIndex, count)}
+          >
+            {count - 2} more...
+          </h6>
+        );
+      } else {
+        return (
+          <h6
+            style={{ color: fontColor }}
+            onClick={() => handleWeekExpansion(weekIndex, count, true)}
+          >
+            Show less
+          </h6>
+        );
+      }
+    }
+
+    return null;
+  };
+
+  const isInCurrentWeek = (task) => {
+    const firstDayOfWeek = today.getDate() - today.getDay();
+    const lastDayOfWeek = firstDayOfWeek + 7;
+
+    if (
+      task.startMonth === monthIndex + 1 ||
+      task.endMonth === monthIndex + 1
+    ) {
+      if (
+        (task.startDay >= firstDayOfWeek && task.startDay < lastDayOfWeek) ||
+        (task.endDay <= lastDayOfWeek && task.endDay > firstDayOfWeek) ||
+        (task.startDay < firstDayOfWeek && task.endDay >= lastDayOfWeek)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   const updateTasks = () => {
@@ -212,28 +522,34 @@ function Calendar() {
           (task.startMonth === monthIndex + 2 &&
             task.startDay <= 42 - daysInMonth - firstDay))
       ) {
-        tasks.push(task);
+        if (mode !== "week") {
+          tasks.push(task);
+        } else if (isInCurrentWeek(task)) {
+          tasks.push(task);
+        }
       }
     });
   };
-
-  // Update current month calendar
-  useEffect(() => {
-    updateMonth(firstDay, daysInMonth);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstDay, daysInMonth]);
 
   // Change first day and number of days in month values
   useEffect(() => {
     setfirstDay(getFirstDay());
     setDaysInMonth(getDaysInMonth());
+    setExpansions({
+      0: "0rem",
+      1: "0rem",
+      2: "0rem",
+      3: "0rem",
+      4: "0rem",
+      5: "0rem",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, monthIndex]);
 
   // Start updates
   useEffect(() => {
     // Update calendar to current month on start
-    updateMonth(firstDay, daysInMonth);
+    updateMonth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -265,9 +581,18 @@ function Calendar() {
     if (!task) return;
     let oneTileMargin = "87.5vh / 6";
     let skippedTileAmount = Math.floor((firstDay + getStartDay(task) - 1) / 7);
-    let positionMargin = `${getTaskPosition(task, i)} * 3.2em`;
+    let positionMargin = `${getTaskPosition(task, i)} * ${
+      mode === "month" ? "2.8em" : "6.2vh"
+    }`;
+    let skippedTilesAdd = 0;
 
-    return `calc(${oneTileMargin} * ${skippedTileAmount} + ${positionMargin})`;
+    Object.entries(expansions).forEach(([key, val]) => {
+      if (key < skippedTileAmount) skippedTilesAdd += parseInt(val);
+    });
+
+    if (mode === "week") return `calc(${positionMargin})`;
+
+    return `calc(${oneTileMargin} * ${skippedTileAmount} + ${positionMargin} + ${skippedTilesAdd}rem)`;
   };
 
   const renderTask = (task, i, j) => {
@@ -283,12 +608,27 @@ function Calendar() {
       rgbCode = "0, 0, 0, ";
     }
 
-    if (task.isRemainder) opacity = 0;
+    if (task.isRemainder && mode === "month") opacity = 0;
 
     // Change the border radius if it expands into other week
     if (task.expandsBackward && task.expandsForward) borderRadius = "0 0 0 0";
     else if (task.expandsBackward) borderRadius = "0 0.5em 0.5em 0";
     else if (task.expandsForward) borderRadius = "0.5em 0 0 0.5em";
+
+    const addonMargin = parseFloat(
+      expansions[getWeekIndex(task.startDay, task.startMonth - 1)]
+    );
+
+    const pos = getTaskPosition(task, i);
+
+    console.log(task);
+
+    if (mode === "month" && pos > 2 && addonMargin < (pos - 2) * expansionAdd)
+      return null;
+
+    if (mode === "week") {
+      if (!isInCurrentWeek(task)) return null;
+    }
 
     return (
       <div
@@ -303,7 +643,10 @@ function Calendar() {
           marginLeft: getMarginLeft(task),
         }}
       >
-        <h5>{task.title}</h5>
+        <h5>
+          {task.title}
+          position: {pos}
+        </h5>
         <h6>{task.description}</h6>
       </div>
     );
@@ -373,27 +716,112 @@ function Calendar() {
     });
   };
 
+  const getCurrentWeekDay = (i) => {
+    const date = today.getDate();
+    const dayInWeek = today.getDay();
+
+    if (i < dayInWeek) {
+      return date - dayInWeek + i;
+    } else {
+      return date + (i - dayInWeek);
+    }
+  };
+
   return (
-    <div className={styles.cal}>
+    <div
+      className={styles.cal}
+      style={{ backgroundColor: bgColor }}
+      onWheel={(event) => {
+        if (event.nativeEvent.wheelDelta > 0) {
+          setDirection(-1);
+          setUpdateDate(updateDate + 1);
+          setScrollUp(0);
+          /** 
+          if (new Date() - scrollTimeDiff < 30) {
+            setScrollUp(scrollUp + 1);
+            setScrollDown(0);
+            if (scrollUp === minScroll) {
+              setDirection(-1);
+              setUpdateDate(updateDate + 1);
+              setScrollUp(0);
+            }
+          }
+          setScrollTimeDiff(new Date());
+          */
+        } else {
+          setDirection(1);
+          setUpdateDate(updateDate + 1);
+          setScrollDown(0);
+          /** 
+          if (new Date() - scrollTimeDiff < 30) {
+            setScrollDown(scrollDown + 1);
+            setScrollUp(0);
+            if (scrollDown === minScroll) {
+              setDirection(1);
+              setUpdateDate(updateDate + 1);
+              setScrollDown(0);
+            }
+          }
+          setScrollTimeDiff(new Date());
+          */
+        }
+      }}
+    >
       <CalendarNavbar
-        parentCallback={(data) => {
+        update={updateDate}
+        direction={direction}
+        dateCallback={(data) => {
           setYear(data.year);
           setMonthIndex(data.monthIndex);
         }}
+        switchCallback={(active) => setMode(active)}
       />
       <div className={styles.content}>
-        <div className={styles.weekdays}>
-          <p>Sun</p>
-          <p>Mon</p>
-          <p>Tue</p>
-          <p>Wed</p>
-          <p>Thur</p>
-          <p>Fri</p>
-          <p>Sat</p>
+        <div
+          className={styles.weekdays}
+          style={{
+            color: fontColor,
+          }}
+        >
+          {["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"].map((day, i) => (
+            <p
+              style={{ borderRight: `1px solid rgba(${borderColor} 0.2)` }}
+              key={i}
+            >
+              {day}
+              {mode === "week" && (
+                <span
+                  style={
+                    getCurrentWeekDay(i) === today.getDate()
+                      ? {
+                          backgroundColor: fontColor,
+                          color: bgColor,
+                        }
+                      : null
+                  }
+                >
+                  {getCurrentWeekDay(i)}
+                </span>
+              )}
+            </p>
+          ))}
         </div>
-        <div className={styles.month}>
+        <div
+          className={styles.month}
+          style={{
+            gridTemplateRows:
+              mode === "month"
+                ? `calc(14.5vh + ${expansions[0]}) calc(14.5vh + ${expansions[1]}) calc(14.5vh + ${expansions[2]}) calc(14.5vh + ${expansions[3]}) calc(14.5vh + ${expansions[4]}) calc(14.5vh + ${expansions[5]})`
+                : "repeat(14, 6.2vh)",
+          }}
+        >
           {month}
-          <div className={styles.tasks}>{renderTasks()}</div>
+          <div
+            className={styles.tasks}
+            style={{ marginTop: mode === "month" ? "1.9rem" : "0.7rem" }}
+          >
+            {renderTasks()}
+          </div>
         </div>
       </div>
     </div>

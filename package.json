@@ -9,12 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.0.0",
     "@ramonak/react-progress-bar": "^3.2.1",
     "axios": "^0.21.2",
     "framer-motion": "^4.1.17",
+    "frappe-gantt-react": "^0.2.2",
+    "moment": "^2.29.1",
     "next": "11.1.0",
     "next-redux-wrapper": "^7.0.4",
+    "next-transpile-modules": "^8.0.0",
     "nprogress": "^0.2.0",
+    "patch-package": "^6.4.7",
     "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-detect-click-outside": "^1.1.1",
@@ -26,6 +33,7 @@
     "redux-thunk": "^2.3.0",
     "sass": "^1.38.2",
     "simplebar-react": "^2.3.5",
+    "snapsvg": "^0.5.1",
     "styled-components": "^5.3.1",
     "uuid": "^8.3.2"
   },

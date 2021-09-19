@@ -8,6 +8,7 @@ import SimpleBar from "simplebar-react";
 
 import Activity from "./Activity/Activity";
 import ActivityDetails from "./ActivityDetails/ActivityDetails";
+import NewActivity from "./NewActivity";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveActivity } from "../../../redux/actions/activityActions";
@@ -20,6 +21,7 @@ function ActivityLog() {
   const dispatch = useDispatch();
 
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [newActivityOpen, setNewActivityOpen] = useState(false);
 
   const [bgColor, setBgColor] = useState("white");
   const [fontColor, setFontColor] = useState("black");
@@ -52,10 +54,6 @@ function ActivityLog() {
     }
   }, [activeActivity]);
 
-  const ref = useDetectClickOutside({
-    onTriggered: () => setDetailsOpen(false),
-  });
-
   return (
     <div
       className={styles.activities}
@@ -67,6 +65,7 @@ function ActivityLog() {
       >
         <h5 onClick={() => setDetailsOpen(true)}>Activity Log</h5>
         <svg
+          onClick={() => setNewActivityOpen(true)}
           width="12"
           height="12"
           viewBox="0 0 12 12"
@@ -80,13 +79,14 @@ function ActivityLog() {
           />
         </svg>
       </div>
-      <div className={styles.activities_holder} ref={ref}>
-        <ActivityDetails
-          opened={detailsOpen}
-          closeDetails={() => setDetailsOpen(false)}
+      <div className={styles.activities_holder}>
+        <ActivityDetails opened={detailsOpen} />
+        <NewActivity
+          opened={newActivityOpen}
+          closeNewActivity={(close) => close && setNewActivityOpen(false)}
         />
         <SimpleBar
-          style={{ maxHeight: activities.length <= 3 ? "40rem" : "37rem" }}
+          style={{ maxHeight: activities.length <= 3 ? "40rem" : "36rem" }}
         >
           {activities.map((activity, i) => (
             <Activity
