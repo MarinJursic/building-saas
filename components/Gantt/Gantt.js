@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-const { FrappeGantt } = require("../../node_modules/frappe-gantt-react");
+const { FrappeGantt } = require("../../node_modules/frappe-first-gantt");
 import AddGanttTask from "./AddGanttTask/AddGanttTask";
 import GanttNavbar from "./GanttNavbar/GanttNavbar";
 import styles from "../../styles/Gantt.module.scss";
