@@ -1,21 +1,35 @@
 import styles from "../styles/Sidebar.module.scss";
-import { BiHomeAlt, BiCalendarAlt } from "react-icons/bi";
-import { BsListTask } from "react-icons/bs";
-import { GoGraph } from "react-icons/go";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
+import { FiCheckCircle } from "react-icons/fi";
+import { BiHomeAlt, BiCalendarAlt } from "react-icons/bi";
+import { BsListTask } from "react-icons/bs";
+import { GoGraph } from "react-icons/go";
+import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
+
 import { useDispatch, useSelector } from "react-redux";
 import { switchColormode } from "../redux/actions/colormodeActions";
+import { openProject } from "../redux/actions/projectActions";
+
+import { motion } from "framer-motion";
+
+import "simplebar/src/simplebar.css";
+import SimpleBar from "simplebar-react";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
   const colormode = useSelector((state) => state.color.colormode);
+  const projects = useSelector((state) => state.project.projects);
 
   const [active, setActive] = useState("");
   const [bgColor, setBgColor] = useState("#f5f6fa");
   const [fontColor, setFontColor] = useState("#5a5e6e");
   const [logoColor, setLogoColor] = useState("black");
+
+  const [fuVal, setFuVal] = useState(0);
+
+  const forceUpdate = () => setFuVal(fuVal + 1);
 
   useEffect(() => {
     try {
@@ -37,31 +51,120 @@ export default function Sidebar() {
     }
   }, [colormode]);
 
-  const projects = [
-    {
-      imgSrc:
-        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
-      open: false,
-    },
-    {
-      imgSrc:
-        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
-      open: false,
-    },
-    {
-      imgSrc:
-        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
-      open: false,
-    },
-    {
-      imgSrc:
-        "https://media.architecturaldigest.com/photos/56ba787ca254b168296a8fff/1:1/w_3460,h_3460,c_limit/zaha-hadid-architecture-01.jpg",
-      open: false,
-    },
-  ];
+  const homeLink = (
+    <Link href="/home">
+      <a
+        className={
+          active === "/" || active === "/home"
+            ? styles.buttonBoxActive
+            : styles.buttonBox
+        }
+        onClick={() => {
+          setActive("/home");
+        }}
+      >
+        <BiHomeAlt color={fontColor} className={styles.button} size="1.5rem" />
+      </a>
+    </Link>
+  );
 
-  const opened = Array(projects.length);
-  opened.fill(false);
+  const listLink = (
+    <Link href="/">
+      <a
+        className={styles.buttonBox}
+        onClick={() => {
+          setActive("/tasks");
+        }}
+      >
+        <RiCheckboxMultipleBlankLine
+          color={fontColor}
+          className={styles.button}
+          size="1.5rem"
+        />
+      </a>
+    </Link>
+  );
+
+  const checkLink = (
+    <Link href="/home">
+      <a
+        className={
+          active === "/" || active === "/home"
+            ? styles.buttonBoxActive
+            : styles.buttonBox
+        }
+        onClick={() => {
+          setActive("/home");
+        }}
+      >
+        <FiCheckCircle
+          color={fontColor}
+          className={styles.button}
+          size="1.5rem"
+        />
+      </a>
+    </Link>
+  );
+
+  const tasksLink = (
+    <Link href="/tasks">
+      <a
+        className={
+          active === "/tasks" ? styles.buttonBoxActive : styles.buttonBox
+        }
+        style={{ backgroundColor: bgColor }}
+        onClick={() => setActive("/tasks")}
+      >
+        <BsListTask color={fontColor} className={styles.button} size="1.5rem" />
+      </a>
+    </Link>
+  );
+
+  const ganttLink = (
+    <Link href="/gantt">
+      <a
+        className={
+          active === "/gantt" ? styles.buttonBoxActive : styles.buttonBox
+        }
+        onClick={() => setActive("/gantt")}
+      >
+        <GoGraph color={fontColor} className={styles.button} size="1.5rem" />
+      </a>
+    </Link>
+  );
+
+  const calendarLink = (
+    <Link href="/calendar">
+      <a
+        className={
+          active === "/calendar" ? styles.buttonBoxActive : styles.buttonBox
+        }
+        onClick={() => setActive("/calendar")}
+      >
+        <BiCalendarAlt
+          color={fontColor}
+          className={styles.button}
+          size="1.5rem"
+        />
+      </a>
+    </Link>
+  );
+
+  const linksVariants = {
+    open: {
+      height: "100%",
+      display: "block",
+      opacity: 1,
+      pointerEvents: "all",
+    },
+    closed: {
+      display: "none",
+      height: "0",
+      paddingBottom: "0.3rem",
+      opacity: 0,
+      pointerEvents: "none",
+    },
+  };
 
   return (
     <div
@@ -75,149 +178,43 @@ export default function Sidebar() {
     >
       <div className={styles.topIcons}>
         <h1 style={{ color: logoColor }}>AU</h1>
-        <Link href="/home">
-          <a
-            className={
-              active === "/" || active === "/home"
-                ? styles.buttonBoxActive
-                : styles.buttonBox
-            }
-            onClick={() => {
-              setActive("/home");
-            }}
-          >
-            <BiHomeAlt
-              color={fontColor}
-              className={styles.button}
-              size="1.5rem"
-            />
-          </a>
-        </Link>
-        <Link href="/tasks">
-          <a
-            className={
-              active === "/tasks" ? styles.buttonBoxActive : styles.buttonBox
-            }
-            style={{ backgroundColor: bgColor }}
-            onClick={() => setActive("/tasks")}
-          >
-            <BsListTask
-              color={fontColor}
-              className={styles.button}
-              size="1.5rem"
-            />
-          </a>
-        </Link>
-        <Link href="/gantt">
-          <a
-            className={
-              active === "/gantt" ? styles.buttonBoxActive : styles.buttonBox
-            }
-            onClick={() => setActive("/gantt")}
-          >
-            <GoGraph
-              color={fontColor}
-              className={styles.button}
-              size="1.5rem"
-            />
-          </a>
-        </Link>
-        <Link href="/calendar">
-          <a
-            className={
-              active === "/calendar" ? styles.buttonBoxActive : styles.buttonBox
-            }
-            onClick={() => setActive("/calendar")}
-          >
-            <BiCalendarAlt
-              color={fontColor}
-              className={styles.button}
-              size="1.5rem"
-            />
-          </a>
-        </Link>
+        {homeLink}
+        {listLink}
       </div>
-      <div className={styles.projects}>
-        {projects.map((project, i) => (
-          <div className={styles.project} key={i}>
-            <img
-              src={project.imgSrc}
-              onClick={() => (opened[i] = !opened[i])}
-            />
-            {opened[i] && (
-              <div className={styles.dropdown}>
-                <Link href="/home">
-                  <a
-                    className={
-                      active === "/" || active === "/home"
-                        ? styles.buttonBoxActive
-                        : styles.buttonBox
-                    }
-                    onClick={() => {
-                      setActive("/home");
-                    }}
-                  >
-                    <BiHomeAlt
-                      color={fontColor}
-                      className={styles.button}
-                      size="1.5rem"
-                    />
-                  </a>
-                </Link>
-                <Link href="/tasks">
-                  <a
-                    className={
-                      active === "/tasks"
-                        ? styles.buttonBoxActive
-                        : styles.buttonBox
-                    }
-                    style={{ backgroundColor: bgColor }}
-                    onClick={() => setActive("/tasks")}
-                  >
-                    <BsListTask
-                      color={fontColor}
-                      className={styles.button}
-                      size="1.5rem"
-                    />
-                  </a>
-                </Link>
-                <Link href="/gantt">
-                  <a
-                    className={
-                      active === "/gantt"
-                        ? styles.buttonBoxActive
-                        : styles.buttonBox
-                    }
-                    onClick={() => setActive("/gantt")}
-                  >
-                    <GoGraph
-                      color={fontColor}
-                      className={styles.button}
-                      size="1.5rem"
-                    />
-                  </a>
-                </Link>
-                <Link href="/calendar">
-                  <a
-                    className={
-                      active === "/calendar"
-                        ? styles.buttonBoxActive
-                        : styles.buttonBox
-                    }
-                    onClick={() => setActive("/calendar")}
-                  >
-                    <BiCalendarAlt
-                      color={fontColor}
-                      className={styles.button}
-                      size="1.5rem"
-                    />
-                  </a>
-                </Link>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+
+      <SimpleBar
+        style={{
+          maxHeight: "35rem",
+          width: "110%",
+          overflowX: "hidden",
+          marginBottom: "auto",
+        }}
+      >
+        <div className={styles.projects}>
+          {projects.map((project) => (
+            <div className={styles.project} key={project.id}>
+              <img
+                src={project.imgUrl}
+                onClick={() => {
+                  dispatch(openProject(project.id));
+                  forceUpdate();
+                }}
+              />
+              <motion.div
+                className={styles.dropdown}
+                animate={project.open ? "open" : "closed"}
+                variants={linksVariants}
+              >
+                {checkLink}
+                {tasksLink}
+                {ganttLink}
+                {calendarLink}
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </SimpleBar>
+
       <div
         style={{
           display: "flex",

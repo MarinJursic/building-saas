@@ -1,4 +1,5 @@
 .cal {
+  transition: 0.3s ease;
   width: 100%;
   height: 100%;
 
@@ -87,7 +88,7 @@
           position: absolute;
           border-radius: 0.5rem;
           text-align: left;
-          padding: 0.35em;
+          padding: 0.37em;
           border-radius: 0.5em;
 
           h5,

@@ -1,5 +1,5 @@
 .addGanttTask {
-  width: 50%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -11,25 +11,27 @@
     place-content: space-between;
     padding: 1.3rem 1rem;
     height: fit-content;
-
-    p {
-      margin-left: 1rem;
-      font-size: 0.9em;
-    }
+    padding-left: 2rem;
 
     .time {
       height: fit-content;
-      margin-right: 1rem;
+      margin-right: 2rem;
       display: flex;
       align-items: center;
+
+      p {
+        margin-left: 2.1rem;
+        font-size: 0.9em;
+      }
     }
   }
 
-  .body {
+  .content {
     .phase,
     .task,
     .add {
-      padding: 1rem 0.5rem;
+      user-select: none;
+      padding: 1.012rem 0.5rem;
       width: 100%;
       display: flex;
       align-items: center;
@@ -42,9 +44,22 @@
       svg {
         margin-right: 1rem;
       }
+
+      input {
+        font-size: 1.3em;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(211, 211, 211, 0.5);
+        outline: none;
+      }
+    }
+
+    .phase {
+      cursor: pointer;
     }
 
     .task {
+      padding: 1.015rem 0.5rem;
       place-content: space-between;
       padding-left: 2rem;
       .info {
@@ -54,8 +69,22 @@
         p {
           opacity: 0.7;
           font-size: 0.9rem;
-          margin-right: 0.5rem;
+          margin-right: 1.5rem;
         }
+      }
+
+      input {
+        font-size: 1.1em;
+        width: 12rem;
+      }
+
+      .dateInput {
+        margin-right: 0.7rem;
+        font-size: 0.8em;
+        border: 1px solid rgba(211, 211, 211, 0.5);
+        border-radius: 0.3rem;
+        width: 8rem;
+        font-family: Inter;
       }
     }
 
@@ -76,16 +105,30 @@
     text-align: center;
     justify-content: center;
     border-radius: 0.5rem;
-    position: absolute;
-    bottom: 1rem;
-    transform: translateX(-50%);
-    left: 50%;
+    margin: 0 auto;
+    margin-top: auto;
+    margin-bottom: 1rem;
     padding: 1rem 0;
     cursor: pointer;
     transition: 0.3s ease;
 
     svg {
       margin-right: 1rem;
+    }
+  }
+
+  .errorMessage {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin: 1rem;
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+    background-color: rgb(255, 73, 73);
+
+    h5 {
+      margin-left: 1rem;
     }
   }
 }

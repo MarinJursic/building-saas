@@ -1,4 +1,5 @@
 .act_details {
+  transition: 0.3s ease;
   padding: 2rem;
   user-select: none;
   position: absolute;
@@ -193,6 +194,7 @@
     border-bottom: 1px solid lightgray;
     font-size: 1.8rem;
     font-weight: bold;
+    font-family: Inter;
     margin-top: 2rem;
     background-color: transparent;
   }
@@ -220,6 +222,7 @@
       width: 70%;
       text-align: left;
       font-weight: normal;
+      font-family: Inter;
       font-size: 1rem;
       line-height: 20px;
       letter-spacing: 0.25px;

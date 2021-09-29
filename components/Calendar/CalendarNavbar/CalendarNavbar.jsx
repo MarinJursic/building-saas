@@ -10,6 +10,16 @@ import { changeName } from "../../../redux/actions/infoActions";
 function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
   const today = new Date();
 
+  const calculateWeek = (day) => {
+    const firstDay = new Date(year, monthIndex, 1).getDay();
+    const offsetDate = day + firstDay - 1;
+    return Math.floor(offsetDate / 7);
+  };
+
+  const getDaysInMonth = () => {
+    return new Date(year, monthIndex, 0).getDate();
+  };
+
   const dispatch = useDispatch();
   const colormode = useSelector((state) => state.color.colormode);
   const name = useSelector((state) => state.info.name);
@@ -31,6 +41,8 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
   ]);
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
+  const [week, setWeek] = useState(calculateWeek(today.getDate()));
+  const [day, setDay] = useState(today.getDate());
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [input, setInput] = useState();
@@ -41,6 +53,8 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
   const [bgColor, setBgColor] = useState("white");
   const [fontColor, setFontColor] = useState("black");
   const [borderColor, setBorderColor] = useState("0, 0, 0,");
+
+  const [weekMode, setWeekMode] = useState(false);
 
   const search = () => {
     console.log(input);
@@ -73,7 +87,13 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
   }, [update]);
 
   useEffect(() => {
-    activeSwitch === "left" ? switchCallback("month") : returnToToday(true);
+    setWeekMode(activeSwitch === "right");
+    if (activeSwitch === "left") {
+      switchCallback("month");
+    } else {
+      setDay(1);
+      switchCallback("week");
+    }
   }, [activeSwitch]);
 
   const switchVariants = {
@@ -87,33 +107,66 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
   };
 
   useEffect(() => {
-    dateCallback({ year, monthIndex });
+    dateCallback({ year, monthIndex, week, day });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [year, monthIndex]);
+  }, [year, monthIndex, week, day]);
 
-  const increaseMonth = () => {
+  const increaseMonth = async () => {
     if (monthIndex === 11) {
       setYear(year + 1);
       setMonthIndex(0);
     } else {
       setMonthIndex(monthIndex + 1);
     }
+
+    return new Promise((res, rej) => res("done"));
   };
 
-  const decreaseMonth = () => {
+  const decreaseMonth = async () => {
     if (monthIndex === 0) {
       setYear(year - 1);
       setMonthIndex(11);
     } else {
       setMonthIndex(monthIndex - 1);
     }
+
+    return new Promise((res, rej) => res("done"));
   };
 
-  const returnToToday = (weekMode = false) => {
+  useEffect(() => {
+    setWeek(calculateWeek(day));
+  }, [day]);
+
+  const increaseWeek = () => {
+    const daysInMonth = getDaysInMonth();
+
+    if (day + 7 > daysInMonth) {
+      if (week != calculateWeek(daysInMonth)) {
+        setDay(daysInMonth);
+      } else {
+        increaseMonth().then(() => setDay(1));
+      }
+    } else {
+      setDay(day + 7);
+    }
+  };
+
+  const decreaseWeek = () => {
+    if (day - 7 <= 0) {
+      if (week != 0) {
+        setDay(0);
+      } else {
+        decreaseMonth().then(() => setDay(getDaysInMonth()));
+      }
+    } else {
+      setDay(day - 7);
+    }
+  };
+
+  const returnToToday = () => {
     setMonthIndex(today.getMonth());
     setYear(today.getFullYear());
-
-    if (weekMode) switchCallback("week");
+    setDay(today.getDate());
   };
 
   return (
@@ -176,50 +229,46 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
         )}
       </div>
       <div className={styles.date}>
-        {activeSwitch === "left" && (
-          <>
-            <p
-              onClick={returnToToday}
-              style={{ border: `1px solid rgba(${borderColor} 0.2)` }}
-            >
-              Today
-            </p>
-            <svg
-              onClick={decreaseMonth}
-              alt="left arrow"
-              style={{ transform: "rotate(90deg)" }}
-              width="12"
-              height="8"
-              viewBox="0 0 10 6"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.09 0.967551L5 3.87755L7.91 0.967551C7.97943 0.898114 8.06187 0.843035 8.15259 0.805456C8.24331 0.767877 8.34055 0.748535 8.43875 0.748535C8.53694 0.748535 8.63418 0.767877 8.7249 0.805456C8.81563 0.843035 8.89806 0.898114 8.9675 0.967551C9.03693 1.03699 9.09201 1.11942 9.12959 1.21014C9.16717 1.30087 9.18651 1.3981 9.18651 1.4963C9.18651 1.5945 9.16717 1.69173 9.12959 1.78246C9.09201 1.87318 9.03693 1.95561 8.9675 2.02505L5.525 5.46755C5.45561 5.53708 5.3732 5.59224 5.28247 5.62988C5.19174 5.66751 5.09447 5.68688 4.99625 5.68688C4.89802 5.68688 4.80076 5.66751 4.71003 5.62988C4.6193 5.59224 4.53688 5.53708 4.4675 5.46755L1.025 2.02505C0.955469 1.95567 0.900309 1.87325 0.862672 1.78252C0.825036 1.69179 0.805664 1.59453 0.805664 1.4963C0.805664 1.39807 0.825036 1.30081 0.862672 1.21008C0.900309 1.11935 0.955469 1.03694 1.025 0.967551C1.3175 0.682551 1.7975 0.675051 2.09 0.967551Z"
-                fill={fontColor}
-                fillOpacity="0.7"
-              />
-            </svg>
-            <svg
-              onClick={increaseMonth}
-              alt="right arrow"
-              style={{ transform: "rotate(-90deg)" }}
-              width="12"
-              height="8"
-              viewBox="0 0 10 6"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2.09 0.967551L5 3.87755L7.91 0.967551C7.97943 0.898114 8.06187 0.843035 8.15259 0.805456C8.24331 0.767877 8.34055 0.748535 8.43875 0.748535C8.53694 0.748535 8.63418 0.767877 8.7249 0.805456C8.81563 0.843035 8.89806 0.898114 8.9675 0.967551C9.03693 1.03699 9.09201 1.11942 9.12959 1.21014C9.16717 1.30087 9.18651 1.3981 9.18651 1.4963C9.18651 1.5945 9.16717 1.69173 9.12959 1.78246C9.09201 1.87318 9.03693 1.95561 8.9675 2.02505L5.525 5.46755C5.45561 5.53708 5.3732 5.59224 5.28247 5.62988C5.19174 5.66751 5.09447 5.68688 4.99625 5.68688C4.89802 5.68688 4.80076 5.66751 4.71003 5.62988C4.6193 5.59224 4.53688 5.53708 4.4675 5.46755L1.025 2.02505C0.955469 1.95567 0.900309 1.87325 0.862672 1.78252C0.825036 1.69179 0.805664 1.59453 0.805664 1.4963C0.805664 1.39807 0.825036 1.30081 0.862672 1.21008C0.900309 1.11935 0.955469 1.03694 1.025 0.967551C1.3175 0.682551 1.7975 0.675051 2.09 0.967551Z"
-                fill={fontColor}
-                fillOpacity="0.7"
-              />
-            </svg>
-          </>
-        )}
+        <p
+          onClick={returnToToday}
+          style={{ border: `1px solid rgba(${borderColor} 0.2)` }}
+        >
+          Today
+        </p>
+        <svg
+          onClick={weekMode ? decreaseWeek : decreaseMonth}
+          alt="left arrow"
+          style={{ transform: "rotate(90deg)" }}
+          width="12"
+          height="8"
+          viewBox="0 0 10 6"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.09 0.967551L5 3.87755L7.91 0.967551C7.97943 0.898114 8.06187 0.843035 8.15259 0.805456C8.24331 0.767877 8.34055 0.748535 8.43875 0.748535C8.53694 0.748535 8.63418 0.767877 8.7249 0.805456C8.81563 0.843035 8.89806 0.898114 8.9675 0.967551C9.03693 1.03699 9.09201 1.11942 9.12959 1.21014C9.16717 1.30087 9.18651 1.3981 9.18651 1.4963C9.18651 1.5945 9.16717 1.69173 9.12959 1.78246C9.09201 1.87318 9.03693 1.95561 8.9675 2.02505L5.525 5.46755C5.45561 5.53708 5.3732 5.59224 5.28247 5.62988C5.19174 5.66751 5.09447 5.68688 4.99625 5.68688C4.89802 5.68688 4.80076 5.66751 4.71003 5.62988C4.6193 5.59224 4.53688 5.53708 4.4675 5.46755L1.025 2.02505C0.955469 1.95567 0.900309 1.87325 0.862672 1.78252C0.825036 1.69179 0.805664 1.59453 0.805664 1.4963C0.805664 1.39807 0.825036 1.30081 0.862672 1.21008C0.900309 1.11935 0.955469 1.03694 1.025 0.967551C1.3175 0.682551 1.7975 0.675051 2.09 0.967551Z"
+            fill={fontColor}
+            fillOpacity="0.7"
+          />
+        </svg>
+        <svg
+          onClick={weekMode ? increaseWeek : increaseMonth}
+          alt="right arrow"
+          style={{ transform: "rotate(-90deg)" }}
+          width="12"
+          height="8"
+          viewBox="0 0 10 6"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.09 0.967551L5 3.87755L7.91 0.967551C7.97943 0.898114 8.06187 0.843035 8.15259 0.805456C8.24331 0.767877 8.34055 0.748535 8.43875 0.748535C8.53694 0.748535 8.63418 0.767877 8.7249 0.805456C8.81563 0.843035 8.89806 0.898114 8.9675 0.967551C9.03693 1.03699 9.09201 1.11942 9.12959 1.21014C9.16717 1.30087 9.18651 1.3981 9.18651 1.4963C9.18651 1.5945 9.16717 1.69173 9.12959 1.78246C9.09201 1.87318 9.03693 1.95561 8.9675 2.02505L5.525 5.46755C5.45561 5.53708 5.3732 5.59224 5.28247 5.62988C5.19174 5.66751 5.09447 5.68688 4.99625 5.68688C4.89802 5.68688 4.80076 5.66751 4.71003 5.62988C4.6193 5.59224 4.53688 5.53708 4.4675 5.46755L1.025 2.02505C0.955469 1.95567 0.900309 1.87325 0.862672 1.78252C0.825036 1.69179 0.805664 1.59453 0.805664 1.4963C0.805664 1.39807 0.825036 1.30081 0.862672 1.21008C0.900309 1.11935 0.955469 1.03694 1.025 0.967551C1.3175 0.682551 1.7975 0.675051 2.09 0.967551Z"
+            fill={fontColor}
+            fillOpacity="0.7"
+          />
+        </svg>
 
-        <h4 style={{ marginLeft: activeSwitch === "right" && "0rem" }}>
+        <h4>
           {allMonths[monthIndex]} {year}
         </h4>
       </div>
@@ -253,6 +302,7 @@ function CalendarNavbar({ update, direction, dateCallback, switchCallback }) {
             placeholder="Search for tasks..."
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
+            style={colormode === "dark" ? { color: "white" } : null}
           />
           <motion.svg
             className={styles.cancel_icon}

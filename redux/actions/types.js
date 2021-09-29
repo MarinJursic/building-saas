@@ -10,4 +10,13 @@ export const ADD_TASK = "ADD_TASK";
 export const DELETE_TASK = "DELETE_TASK";
 export const SET_ACTIVE_TASK = "SET_ACTIVE_TASK";
 
+export const ADD_PHASE = "ADD_PHASE";
+export const UPDATE_PHASES = "UPDATE_PHASES";
+
+export const ADD_PROJECT = "ADD_PROJECT";
+export const UPDATE_PROJECTS = "UPDATE_PROJECTS";
+
 export const SWITCH_COLORMODE = "SWITCH_COLORMODE";
+
+export const GET_ERRORS = "GET_ERRORS";
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

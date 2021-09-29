@@ -1,3 +1,27 @@
+$bar-color: #b8c2cc !default;
+$bar-stroke: #8d99a6 !default;
+$border-color: #e0e0e0 !default;
+$light-bg: #f5f5f5 !default;
+$light-border-color: #ebeff2 !default;
+$light-yellow: #fcf8e3 !default;
+$text-muted: #666 !default;
+$text-light: #555 !default;
+$text-color: #333 !default;
+$blue: #7a9eff !default;
+$handle-color: #ddd !default;
+
+$bar-color-dark: #b8c2cc !default;
+$bar-stroke-dark: #8d99a6 !default;
+$border-color-dark: #3d3e42 !default;
+$light-bg-dark: #f5f5f5 !default;
+$light-border-color-dark: #ebeff2 !default;
+$light-yellow-dark: #fcf8e3 !default;
+$text-muted-dark: #ffffff !default;
+$text-light-dark: #555 !default;
+$text-color-dark: #ffffff !default;
+$blue-dark: #7a9eff !default;
+$handle-color-dark: #ddd !default;
+
 .main {
   height: 100%;
   width: 100%;
@@ -8,8 +32,618 @@
     height: 100%;
     display: flex;
 
-    div {
-      overflow: hidden !important;
+    .mainDarkGantt {
+      width: 70%;
+      overflow: hidden;
+
+      div {
+        height: 100%;
+        overflow: hidden !important;
+
+        div {
+          position: relative;
+          font-size: 12px;
+          overflow: hidden;
+          overflow-x: scroll !important;
+
+          div {
+            opacity: 0;
+            display: none;
+          }
+
+          svg {
+            height: 100% !important;
+            g:first-child {
+              rect:first-child {
+                fill: #222328;
+              }
+              g {
+                rect {
+                  fill: #ffffff00;
+
+                  &:nth-child(even) {
+                    fill: #222328;
+                  }
+                }
+
+                line {
+                  stroke: darken($border-color-dark, 5%);
+                }
+              }
+
+              rect:not(:first-child) {
+                fill: #222328;
+                stroke: $border-color-dark;
+              }
+
+              path {
+                stroke: $border-color-dark;
+                stroke-width: 0.25;
+              }
+
+              rect:last-child {
+                fill: #222328;
+                opacity: 0.5;
+              }
+            }
+
+            g:nth-child(2) {
+              text {
+                font-size: 12px;
+                text-anchor: middle;
+                fill: $text-color-dark;
+              }
+            }
+
+            g:nth-child(3) {
+              fill: none;
+              stroke: $text-muted-dark;
+            }
+
+            g:nth-child(4) {
+              z-index: 1;
+            }
+
+            g:nth-child(5) {
+              fill: lighten($blue, 10);
+              stroke: $bar-stroke;
+              stroke-width: 0;
+              transition: stroke-width 0.3s ease;
+              user-select: none;
+              g {
+                cursor: pointer;
+                outline: none;
+
+                G:not(:first-child) {
+                  rect {
+                    fill: $handle-color;
+                    cursor: ew-resize;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease;
+                  }
+
+                  polygon {
+                    fill: $handle-color;
+                    cursor: ew-resize;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease;
+                  }
+                }
+
+                g:first-child {
+                  &:hover {
+                    rect:first-child {
+                      fill: darken($blue, 2.5%);
+                    }
+                    rect:not(:first-child) {
+                      fill: darken($blue, 5%);
+                    }
+                  }
+
+                  rect:first-child {
+                    fill: $blue;
+                    fill-opacity: 0.5;
+                    stroke: $bar-stroke;
+                    stroke-width: 0;
+                    transition: stroke-width 0.3s ease;
+                    user-select: none;
+                  }
+
+                  rect:not(:first-child) {
+                    fill: $blue;
+                  }
+                  text {
+                    fill: #fff;
+                    dominant-baseline: central;
+                    text-anchor: middle;
+                    font-size: 12px;
+                    font-weight: lighter;
+                  }
+                }
+
+                g:not(:first-child) {
+                  fill: $blue;
+                }
+
+                &:hover {
+                  .bar {
+                    fill: lighten($blue, 10);
+                  }
+
+                  .bar-progress {
+                    fill: darken($blue, 5);
+                  }
+                }
+
+                &.active {
+                  .bar {
+                    fill: lighten($blue, 10);
+                  }
+
+                  .bar-progress {
+                    fill: darken($blue, 5);
+                  }
+                }
+              }
+            }
+
+            .grid-background {
+              fill: none;
+            }
+            .grid-header {
+              fill: #ffffff;
+              stroke: $border-color;
+              stroke-width: 1.4;
+            }
+            .grid-row {
+              fill: #ffffff00;
+            }
+            .grid-row:nth-child(even) {
+              fill: #ffffff00;
+            }
+            .row-line {
+              stroke: darken($border-color, 5%); // $light-border-color;
+            }
+            .tick {
+              stroke: darken($border-color, 10%);
+              stroke-width: 0.25;
+              &.thick {
+                stroke-width: 0.25;
+              }
+            }
+            .today-highlight {
+              fill: $light-yellow;
+              opacity: 0.5;
+            }
+
+            .arrow {
+              fill: none;
+              stroke: $text-muted;
+              stroke-width: 1.4;
+            }
+
+            .bar {
+              fill: lighten($blue, 10);
+              stroke: $bar-stroke;
+              stroke-width: 0;
+              transition: stroke-width 0.3s ease;
+              user-select: none;
+            }
+            .bar-progress {
+              fill: $blue;
+            }
+            .bar-invalid {
+              fill: transparent;
+              stroke: $bar-stroke;
+              stroke-width: 1;
+              stroke-dasharray: 5;
+
+              & ~ .bar-label {
+                fill: $text-light;
+              }
+            }
+            .bar-label {
+              fill: #fff;
+              dominant-baseline: central;
+              text-anchor: middle;
+              font-size: 12px;
+              font-weight: lighter;
+
+              &.big {
+                fill: $text-light;
+                text-anchor: start;
+              }
+            }
+
+            .handle {
+              fill: $handle-color;
+              cursor: ew-resize;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease;
+            }
+
+            .bar-wrapper {
+              cursor: pointer;
+              outline: none;
+
+              &:hover {
+                .bar {
+                  fill: lighten($blue, 10);
+                }
+
+                .bar-progress {
+                  fill: darken($blue, 5);
+                }
+              }
+
+              &.active {
+                .bar {
+                  fill: lighten($blue, 10);
+                }
+
+                .bar-progress {
+                  fill: darken($blue, 5);
+                }
+              }
+            }
+
+            .lower-text,
+            .upper-text {
+              font-size: 12px;
+              text-anchor: middle;
+            }
+            .upper-text {
+              fill: $text-light;
+            }
+            .lower-text {
+              fill: $text-color;
+            }
+
+            .hide {
+              display: none;
+            }
+          }
+
+          .popup-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0;
+            color: #959da5;
+            border-radius: 3px;
+            height: 50px !important;
+
+            .title {
+              border-bottom: 3px solid $blue;
+              padding: 10px;
+              display: none !important;
+              height: 0% !important;
+            }
+
+            .subtitle {
+              padding: 10px;
+              color: #dfe2e5;
+              height: 100% !important;
+            }
+
+            .pointer {
+              position: absolute;
+              height: 5px;
+              margin: 0 0 0 -5px;
+              border: 5px solid transparent;
+              border-top-color: rgba(0, 0, 0, 0.8);
+            }
+          }
+        }
+      }
+    }
+
+    .mainGantt {
+      width: 70%;
+      overflow: hidden;
+
+      div {
+        height: 100%;
+        overflow: hidden !important;
+
+        div {
+          position: relative;
+          font-size: 12px;
+          overflow-y: hidden;
+          overflow-x: scroll !important;
+
+          svg {
+            height: 100% !important;
+            g:first-child {
+              rect:first-child {
+                fill: none;
+              }
+              g {
+                rect {
+                  fill: #ffffff00;
+
+                  &:nth-child(even) {
+                    fill: #ffffff00;
+                  }
+                }
+
+                line {
+                  stroke: darken($border-color, 5%);
+                }
+              }
+
+              rect:not(:first-child) {
+                fill: #ffffff;
+                stroke: $border-color;
+              }
+
+              path {
+                stroke: darken($border-color, 10%);
+                stroke-width: 0.25;
+              }
+
+              rect:last-child {
+                fill: #ffffff00;
+                opacity: 0.5;
+              }
+            }
+
+            g:nth-child(2) {
+              text {
+                font-size: 12px;
+                text-anchor: middle;
+                color: $text-color;
+              }
+            }
+
+            g:nth-child(3) {
+              fill: none;
+              stroke: $text-muted;
+            }
+
+            g:nth-child(4) {
+              z-index: 1;
+            }
+
+            g:nth-child(5) {
+              fill: lighten($blue, 10);
+              stroke: $bar-stroke;
+              stroke-width: 0;
+              transition: stroke-width 0.3s ease;
+              user-select: none;
+              g {
+                cursor: pointer;
+                outline: none;
+
+                G:not(:first-child) {
+                  rect {
+                    fill: $handle-color;
+                    cursor: ew-resize;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease;
+                  }
+
+                  polygon {
+                    fill: $handle-color;
+                    cursor: ew-resize;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease;
+                  }
+                }
+
+                g:first-child {
+                  &:hover {
+                    rect:first-child {
+                      fill: lighten($blue, 5%);
+                    }
+                    rect:not(:first-child) {
+                      fill: darken($blue, 5%);
+                    }
+                  }
+
+                  rect:first-child {
+                    fill: lighten($blue, 10);
+                    stroke: $bar-stroke;
+                    stroke-width: 0;
+                    transition: stroke-width 0.3s ease;
+                    user-select: none;
+                  }
+
+                  rect:not(:first-child) {
+                    fill: $blue;
+                  }
+                  text {
+                    fill: #fff;
+                    dominant-baseline: central;
+                    text-anchor: middle;
+                    font-size: 12px;
+                    font-weight: lighter;
+                  }
+                }
+
+                g:not(:first-child) {
+                  fill: $blue;
+                }
+
+                &:hover {
+                  .bar {
+                    fill: lighten($blue, 10);
+                  }
+
+                  .bar-progress {
+                    fill: darken($blue, 5);
+                  }
+                }
+
+                &.active {
+                  .bar {
+                    fill: lighten($blue, 10);
+                  }
+
+                  .bar-progress {
+                    fill: darken($blue, 5);
+                  }
+                }
+              }
+            }
+
+            .grid-background {
+              fill: none;
+            }
+            .grid-header {
+              fill: #ffffff;
+              stroke: $border-color;
+              stroke-width: 1.4;
+            }
+            .grid-row {
+              fill: #ffffff00;
+            }
+            .grid-row:nth-child(even) {
+              fill: #ffffff00;
+            }
+            .row-line {
+              stroke: darken($border-color, 5%); // $light-border-color;
+            }
+            .tick {
+              stroke: darken($border-color, 10%);
+              stroke-width: 0.25;
+              &.thick {
+                stroke-width: 0.25;
+              }
+            }
+            .today-highlight {
+              fill: #ffffff00;
+              opacity: 0.5;
+            }
+
+            .arrow {
+              fill: none;
+              stroke: $text-muted;
+              stroke-width: 1.4;
+            }
+
+            .bar {
+              fill: lighten($blue, 10);
+              stroke: $bar-stroke;
+              stroke-width: 0;
+              transition: stroke-width 0.3s ease;
+              user-select: none;
+            }
+            .bar-progress {
+              fill: $blue;
+            }
+            .bar-invalid {
+              fill: transparent;
+              stroke: $bar-stroke;
+              stroke-width: 1;
+              stroke-dasharray: 5;
+
+              & ~ .bar-label {
+                fill: $text-light;
+              }
+            }
+            .bar-label {
+              fill: #fff;
+              dominant-baseline: central;
+              text-anchor: middle;
+              font-size: 12px;
+              font-weight: lighter;
+
+              &.big {
+                fill: $text-light;
+                text-anchor: start;
+              }
+            }
+
+            .handle {
+              fill: $handle-color;
+              cursor: ew-resize;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease;
+            }
+
+            .bar-wrapper {
+              cursor: pointer;
+              outline: none;
+
+              &:hover {
+                .bar {
+                  fill: lighten($blue, 10);
+                }
+
+                .bar-progress {
+                  fill: darken($blue, 5);
+                }
+              }
+
+              &.active {
+                .bar {
+                  fill: lighten($blue, 10);
+                }
+
+                .bar-progress {
+                  fill: darken($blue, 5);
+                }
+              }
+            }
+
+            .lower-text,
+            .upper-text {
+              font-size: 12px;
+              text-anchor: middle;
+            }
+            .upper-text {
+              fill: $text-light;
+            }
+            .lower-text {
+              fill: $text-color;
+            }
+
+            .hide {
+              display: none;
+            }
+          }
+
+          .popup-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0;
+            color: #959da5;
+            border-radius: 3px;
+            height: 50px !important;
+
+            .title {
+              border-bottom: 3px solid $blue;
+              padding: 10px;
+              display: none !important;
+              height: 0% !important;
+            }
+
+            .subtitle {
+              padding: 10px;
+              color: #dfe2e5;
+              height: 100% !important;
+            }
+
+            .pointer {
+              position: absolute;
+              height: 5px;
+              margin: 0 0 0 -5px;
+              border: 5px solid transparent;
+              border-top-color: rgba(0, 0, 0, 0.8);
+            }
+          }
+        }
+      }
     }
   }
 }

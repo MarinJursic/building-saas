@@ -152,6 +152,7 @@ function ActivityDetails({ opened }) {
   const handleDelete = (e) => {
     e.stopPropagation();
     dispatch(deleteActivity(activity.id));
+    dispatch(setActiveActivity(null));
     setOpen(false);
   };
 

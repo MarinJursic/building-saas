@@ -12,7 +12,7 @@ import {
 import { switchColormode } from "../../../../redux/actions/colormodeActions";
 import { useDispatch, useSelector } from "react-redux";
 
-function Activity({ activity, openedDetails }) {
+function Activity({ activity }) {
   const dispatch = useDispatch();
   const activeActivity = useSelector((state) => state.activity.activeActivity);
   const colormode = useSelector((state) => state.color.colormode);

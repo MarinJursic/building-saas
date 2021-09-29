@@ -47,6 +47,7 @@ function ActivityLog() {
   }, [detailsOpen]);
 
   useEffect(() => {
+    console.log(activeActivity);
     if (activeActivity) {
       setDetailsOpen(true);
     } else {
@@ -92,10 +93,6 @@ function ActivityLog() {
             <Activity
               key={activity.id}
               activity={{ ...activity, ...{ isFirst: i === 0 } }}
-              openedDetails={(activity) => {
-                setDetailsOpen(true);
-                setActiveActivity(activity);
-              }}
             />
           ))}
         </SimpleBar>

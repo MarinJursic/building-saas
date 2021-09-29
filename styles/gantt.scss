@@ -7,10 +7,11 @@ $light-yellow: #fcf8e3 !default;
 $text-muted: #666 !default;
 $text-light: #555 !default;
 $text-color: #333 !default;
-$blue: #a3a3ff !default;
+$blue: #7a9eff !default;
 $handle-color: #ddd !default;
 
 .gantt {
+  height: 100% !important;
   .grid-background {
     fill: none;
   }
@@ -20,19 +21,19 @@ $handle-color: #ddd !default;
     stroke-width: 1.4;
   }
   .grid-row {
-    fill: #ffffff;
+    fill: #ffffff00;
   }
   .grid-row:nth-child(even) {
-    fill: $light-bg;
+    fill: #ffffff00;
   }
   .row-line {
-    stroke: $light-border-color;
+    stroke: darken($border-color, 5%); // $light-border-color;
   }
   .tick {
-    stroke: $border-color;
-    stroke-width: 0.2;
+    stroke: darken($border-color, 10%);
+    stroke-width: 0.25;
     &.thick {
-      stroke-width: 0.4;
+      stroke-width: 0.25;
     }
   }
   .today-highlight {
@@ -47,7 +48,7 @@ $handle-color: #ddd !default;
   }
 
   .bar {
-    fill: $bar-color;
+    fill: lighten($blue, 10);
     stroke: $bar-stroke;
     stroke-width: 0;
     transition: stroke-width 0.3s ease;
@@ -93,22 +94,17 @@ $handle-color: #ddd !default;
 
     &:hover {
       .bar {
-        fill: darken($bar-color, 5);
+        fill: lighten($blue, 10);
       }
 
       .bar-progress {
         fill: darken($blue, 5);
       }
-
-      .handle {
-        visibility: visible;
-        opacity: 1;
-      }
     }
 
     &.active {
       .bar {
-        fill: darken($bar-color, 5);
+        fill: lighten($blue, 10);
       }
 
       .bar-progress {
@@ -136,7 +132,6 @@ $handle-color: #ddd !default;
 
 .gantt-container {
   position: relative;
-  overflow: auto;
   font-size: 12px;
 
   .popup-wrapper {
@@ -147,15 +142,19 @@ $handle-color: #ddd !default;
     padding: 0;
     color: #959da5;
     border-radius: 3px;
+    height: 50px !important;
 
     .title {
       border-bottom: 3px solid $blue;
       padding: 10px;
+      display: none !important;
+      height: 0% !important;
     }
 
     .subtitle {
       padding: 10px;
       color: #dfe2e5;
+      height: 100% !important;
     }
 
     .pointer {

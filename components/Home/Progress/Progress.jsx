@@ -10,6 +10,7 @@ import { switchColormode } from "../../../redux/actions/colormodeActions";
 function Progress() {
   const dispatch = useDispatch();
   const colormode = useSelector((state) => state.color.colormode);
+  const phases = useSelector((state) => state.phase.phases);
 
   const [bgColor, setBgColor] = useState("white");
   const [fontColor, setFontColor] = useState("black");
@@ -23,35 +24,6 @@ function Progress() {
       setFontColor("white");
     }
   }, [colormode]);
-
-  const progressFields = [
-    {
-      title: "Excavation",
-      progress: 100,
-      children: [
-        {
-          title: "Subphase",
-          progress: 50,
-        },
-      ],
-    },
-    {
-      title: "Foundation",
-      progress: 65,
-    },
-    {
-      title: "Framing",
-      progress: 45,
-    },
-    {
-      title: "Dry wall",
-      progress: 25,
-    },
-    {
-      title: "Trim",
-      progress: 0,
-    },
-  ];
 
   return (
     <div
@@ -72,7 +44,7 @@ function Progress() {
       </div>
 
       <div className={styles.bottom}>
-        {progressFields.map((field, i) => (
+        {phases.map((field, i) => (
           <ProgressField field={field} key={i} />
         ))}
       </div>

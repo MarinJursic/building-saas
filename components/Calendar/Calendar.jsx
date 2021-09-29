@@ -28,6 +28,7 @@ function Calendar() {
 
   const [FUexpansions, setFUexpansions] = useState(0);
   const [expansionAdd] = useState(3);
+  const [openedDay, setOpenedDay] = useState(0);
   const [expansions, setExpansions] = useState({
     0: "0rem",
     1: "0rem",
@@ -64,7 +65,7 @@ function Calendar() {
       endMonth: 8,
       startYear: 2021,
       endYear: 2021,
-      title: "from 3 to 9",
+      title: "from 3 to 9 1",
       description: "Foundation • Not Started",
     },
     {
@@ -74,7 +75,7 @@ function Calendar() {
       endMonth: 8,
       startYear: 2021,
       endYear: 2021,
-      title: "from 3 to 9",
+      title: "from 3 to 9 2",
       description: "Foundation • Not Started",
     },
     {
@@ -84,7 +85,7 @@ function Calendar() {
       endMonth: 8,
       startYear: 2021,
       endYear: 2021,
-      title: "from 3 to 9",
+      title: "from 3 to 9 3",
       description: "Foundation • Not Started",
     },
     {
@@ -138,103 +139,13 @@ function Calendar() {
       description: "Foundation • Not Started",
     },
     {
-      startDay: 13,
-      endDay: 28,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 13 to 28",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 12,
-      endDay: 21,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 12 to 21",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
+      startDay: 14,
       endDay: 23,
       startMonth: 9,
       endMonth: 9,
       startYear: 2021,
       endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
-      description: "Foundation • Not Started",
-    },
-    {
-      startDay: 20,
-      endDay: 23,
-      startMonth: 9,
-      endMonth: 9,
-      startYear: 2021,
-      endYear: 2021,
-      title: "from 20 to 23",
+      title: "from 14 to 23",
       description: "Foundation • Not Started",
     },
     {
@@ -249,7 +160,7 @@ function Calendar() {
     },
   ];
 
-  const tasks = [];
+  let tasks = [];
 
   const [allMonths] = useState([
     "January",
@@ -288,19 +199,45 @@ function Calendar() {
     let count = 0;
 
     tasks.forEach((taskTemp) => {
-      if (!taskTemp.isRemainder) {
-        const taskRange = [taskTemp.startDay, taskTemp.endDay];
-        takenRangePairs.push(taskRange);
-      } else {
-        takenRangePairs.push([2, 1]);
-      }
+      const taskRange = [taskTemp.startDay, taskTemp.endDay];
+      takenRangePairs.push(taskRange);
     });
 
-    takenRangePairs.slice(0, i).forEach((takenRangePair) => {
+    const slicedPairs = takenRangePairs.slice(0, i);
+    let currDayPairs = [];
+    let remainderDayPairs = [];
+    let finalPairs = [];
+
+    console.log(tasks);
+
+    if (
+      openedDay !== 0 &&
+      currRangePair[0] <= openedDay &&
+      currRangePair[1] > openedDay
+    ) {
+      slicedPairs.forEach((pair) => {
+        if (pair[0] <= openedDay && pair[1] > openedDay) {
+          currDayPairs.push(pair);
+        } else {
+          remainderDayPairs.push(pair);
+        }
+
+        finalPairs = currDayPairs;
+      });
+
+      console.log("Day", openedDay);
+      console.log("Final", finalPairs);
+      console.log("Sliced", slicedPairs);
+      console.log("Task", task);
+    } else {
+      finalPairs = slicedPairs;
+    }
+
+    finalPairs.forEach((takenRangePair) => {
       if (
         (currRangePair[0] >= takenRangePair[0] &&
-          currRangePair[0] <= takenRangePair[1]) ||
-        (currRangePair[1] >= takenRangePair[0] &&
+          currRangePair[0] < takenRangePair[1]) ||
+        (currRangePair[1] > takenRangePair[0] &&
           currRangePair[1] <= takenRangePair[1])
       ) {
         count++;
@@ -314,6 +251,8 @@ function Calendar() {
   const [firstDay, setfirstDay] = useState(getFirstDay());
   const [daysInMonth, setDaysInMonth] = useState(getDaysInMonth());
   const [month, setMonth] = useState([]);
+  const [day, setDay] = useState(today.getDate());
+  const [week, setWeek] = useState(0);
 
   const updateMonth = () => {
     const days = [];
@@ -365,7 +304,7 @@ function Calendar() {
             year === today.getFullYear() && (
               <div
                 className={styles.today}
-                style={{ backgroundColor: fontColor }}
+                style={{ backgroundColor: fontColor, opacity: 0.9 }}
               >
                 <p
                   style={{
@@ -386,6 +325,7 @@ function Calendar() {
               opacity: 1,
               borderRight: `1px solid rgba(${borderColor} 0.2)`,
               borderTop: `1px solid rgba(${borderColor} 0.2)`,
+              opacity: 0.7,
             }}
           >
             {i === 0
@@ -442,8 +382,10 @@ function Calendar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstDay, daysInMonth, FUexpansions, mode]);
 
-  const handleWeekExpansion = (weekIndex, count, close = false) => {
+  const handleWeekExpansion = (weekIndex, count, day, close = false) => {
     if (close) count = 2;
+
+    setOpenedDay(day);
 
     const tempExpansions = expansions;
     tempExpansions[weekIndex] = `${(count - 2) * expansionAdd}rem`;
@@ -472,7 +414,7 @@ function Calendar() {
         return (
           <h6
             style={{ color: fontColor }}
-            onClick={() => handleWeekExpansion(weekIndex, count)}
+            onClick={() => handleWeekExpansion(weekIndex, count, day)}
           >
             {count - 2} more...
           </h6>
@@ -481,7 +423,7 @@ function Calendar() {
         return (
           <h6
             style={{ color: fontColor }}
-            onClick={() => handleWeekExpansion(weekIndex, count, true)}
+            onClick={() => handleWeekExpansion(weekIndex, count, 0, true)}
           >
             Show less
           </h6>
@@ -493,7 +435,7 @@ function Calendar() {
   };
 
   const isInCurrentWeek = (task) => {
-    const firstDayOfWeek = today.getDate() - today.getDay();
+    const firstDayOfWeek = day - new Date(year, monthIndex, day).getDay();
     const lastDayOfWeek = firstDayOfWeek + 7;
 
     if (
@@ -595,20 +537,24 @@ function Calendar() {
     return `calc(${oneTileMargin} * ${skippedTileAmount} + ${positionMargin} + ${skippedTilesAdd}rem)`;
   };
 
-  const renderTask = (task, i, j) => {
+  const renderTask = (task, i) => {
     let borderRadius = null;
     let backgroundColor = "#4bc0fb";
     let opacity = 1;
     let rgbCode = "255, 255, 255,";
+
+    const pos = getTaskPosition(task, i);
 
     // Change bg color and opacity if it is not from current month
     if (task.endMonth != monthIndex + 1 || task.startMonth != monthIndex + 1) {
       backgroundColor = "#ededef";
       opacity = 0.3;
       rgbCode = "0, 0, 0, ";
+
+      if (pos > 1) return null;
     }
 
-    if (task.isRemainder && mode === "month") opacity = 0;
+    if (task.isRemainder && mode === "month") opacity = 1;
 
     // Change the border radius if it expands into other week
     if (task.expandsBackward && task.expandsForward) borderRadius = "0 0 0 0";
@@ -619,11 +565,7 @@ function Calendar() {
       expansions[getWeekIndex(task.startDay, task.startMonth - 1)]
     );
 
-    const pos = getTaskPosition(task, i);
-
-    console.log(task);
-
-    if (mode === "month" && pos > 2 && addonMargin < (pos - 2) * expansionAdd)
+    if (mode === "month" && pos > 1 && addonMargin < (pos - 1) * expansionAdd)
       return null;
 
     if (mode === "week") {
@@ -639,14 +581,11 @@ function Calendar() {
           backgroundColor: backgroundColor,
           borderRadius: `${borderRadius != null ? borderRadius : "0.5em"}`,
           width: `calc(100% / 7 * ${task.endDay - task.startDay})`,
-          marginTop: getMarginTop(task, j),
+          marginTop: getMarginTop(task, i),
           marginLeft: getMarginLeft(task),
         }}
       >
-        <h5>
-          {task.title}
-          position: {pos}
-        </h5>
+        <h5>{task.title}</h5>
         <h6>{task.description}</h6>
       </div>
     );
@@ -684,6 +623,7 @@ function Calendar() {
         startDay: newEndDay,
         isRemainder: true,
         expandsBackward: true,
+        title: task.title,
       };
 
       if (remainderTask.endDay - remainderTask.startDay <= 0) return [newTask];
@@ -708,22 +648,44 @@ function Calendar() {
 
     newTasks = flatten(newTasks);
 
-    let j = -1;
+    let nonRemainderTasks = [];
+    let remainderTasks = [];
 
-    return newTasks.map((task, i) => {
-      if (!task.isRemainder) j++;
-      return renderTask(task, i, j);
+    newTasks.forEach((task) => {
+      if (task.isRemainder) remainderTasks.push(task);
+      else nonRemainderTasks.push(task);
+    });
+
+    tasks = nonRemainderTasks.concat(remainderTasks);
+
+    return tasks.map((task, i) => {
+      return renderTask(task, i);
     });
   };
 
   const getCurrentWeekDay = (i) => {
-    const date = today.getDate();
-    const dayInWeek = today.getDay();
+    const date = day;
+    const dayInWeek = new Date(year, monthIndex, day).getDay();
+
+    const lastMonthDays = new Date(year, monthIndex, 0).getDate();
+    const currMonthDays = new Date(year, monthIndex + 1, 0).getDate();
 
     if (i < dayInWeek) {
-      return date - dayInWeek + i;
+      const result = date - dayInWeek + i;
+      if (result <= 0) {
+        return lastMonthDays + result;
+      } else if (result > currMonthDays) {
+        return result - currMonthDays;
+      }
+      return result;
     } else {
-      return date + (i - dayInWeek);
+      const result = date + (i - dayInWeek);
+      if (result <= 0) {
+        return lastMonthDays + result;
+      } else if (result > currMonthDays) {
+        return result - currMonthDays;
+      }
+      return result;
     }
   };
 
@@ -736,34 +698,10 @@ function Calendar() {
           setDirection(-1);
           setUpdateDate(updateDate + 1);
           setScrollUp(0);
-          /** 
-          if (new Date() - scrollTimeDiff < 30) {
-            setScrollUp(scrollUp + 1);
-            setScrollDown(0);
-            if (scrollUp === minScroll) {
-              setDirection(-1);
-              setUpdateDate(updateDate + 1);
-              setScrollUp(0);
-            }
-          }
-          setScrollTimeDiff(new Date());
-          */
         } else {
           setDirection(1);
           setUpdateDate(updateDate + 1);
           setScrollDown(0);
-          /** 
-          if (new Date() - scrollTimeDiff < 30) {
-            setScrollDown(scrollDown + 1);
-            setScrollUp(0);
-            if (scrollDown === minScroll) {
-              setDirection(1);
-              setUpdateDate(updateDate + 1);
-              setScrollDown(0);
-            }
-          }
-          setScrollTimeDiff(new Date());
-          */
         }
       }}
     >
@@ -773,6 +711,8 @@ function Calendar() {
         dateCallback={(data) => {
           setYear(data.year);
           setMonthIndex(data.monthIndex);
+          setWeek(data.week);
+          setDay(data.day);
         }}
         switchCallback={(active) => setMode(active)}
       />
@@ -792,12 +732,20 @@ function Calendar() {
               {mode === "week" && (
                 <span
                   style={
-                    getCurrentWeekDay(i) === today.getDate()
+                    getCurrentWeekDay(i) === today.getDate() &&
+                    monthIndex === today.getMonth() &&
+                    year === today.getFullYear()
                       ? {
                           backgroundColor: fontColor,
                           color: bgColor,
                         }
-                      : null
+                      : {
+                          opacity:
+                            (getCurrentWeekDay(i) > 7 && week === 0) ||
+                            (getCurrentWeekDay(i) < 7 && week > 2)
+                              ? "0.3"
+                              : "1",
+                        }
                   }
                 >
                   {getCurrentWeekDay(i)}

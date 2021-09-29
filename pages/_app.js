@@ -1,7 +1,5 @@
 import "../styles/globals.css";
-import "../styles/gantt.scss";
 import Sidebar from "../components/Sidebar";
-
 import { Provider } from "react-redux";
 import { useStore } from "../redux/store";
 import Router from "next/router";

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { switchColormode } from "../../../../redux/actions/colormodeActions";
 
 function ProgressField({ field }) {
-  const [renderChildren, setRenderChildren] = useState(false);
+  const [renderSubphases, setRenderSubphases] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const dispatch = useDispatch();
@@ -43,16 +43,18 @@ function ProgressField({ field }) {
       <div className={styles.parent}>
         <div
           className={styles.title}
-          onClick={() => setRenderChildren(!renderChildren)}
+          onClick={() => setRenderSubphases(!renderSubphases)}
           style={{
             cursor:
-              field.children && field.children.length > 0
+              field.subphases && field.subphases.length > 0
                 ? "pointer"
                 : "default",
           }}
         >
-          <h5 style={{ marginLeft: field.isChild && "1em" }}>{field.title}</h5>
-          {field.children && field.children.length > 0 && (
+          <h5 style={{ marginLeft: field.isChild ? "1em" : "0em" }}>
+            {field.name}
+          </h5>
+          {field.subphases && field.subphases.length > 0 && (
             <svg
               width="11"
               height="7"
@@ -83,10 +85,10 @@ function ProgressField({ field }) {
           />
         </div>
       </div>
-      <div className={styles.children}>
-        {field.children &&
-          renderChildren &&
-          field.children.map((child, i) => (
+      <div className={styles.subphases}>
+        {field.subphases &&
+          renderSubphases &&
+          field.subphases.map((child, i) => (
             <ProgressField field={{ ...child, isChild: true }} key={i} />
           ))}
       </div>

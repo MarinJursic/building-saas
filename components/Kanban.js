@@ -20,6 +20,10 @@ export default function Kanban() {
 
   const colormode = useSelector((state) => state.color.colormode);
 
+  const [NotStartedExpand, setNotStartedExpand] = useState(true);
+  const [InProgressExpand, setInProgressExpand] = useState(true);
+  const [DoneExpand, setDoneExpand] = useState(true);
+
   const [bgColor, setBgColor] = useState("#F5F6FA");
   const [secondaryColor, setSecondaryColor] = useState("#FFFFFF");
   const [mainFontColor, setMainFontColor] = useState("black");
@@ -1231,7 +1235,23 @@ export default function Kanban() {
                             backgroundColor: "#C67AFF",
                           }}
                         >
-                          <strong>X</strong>
+                          {editDetails && (
+                            <strong>
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M9.72492 0.282485C9.65554 0.212957 9.57312 0.157796 9.48239 0.12016C9.39166 0.0825241 9.2944 0.0631515 9.19617 0.0631515C9.09795 0.0631515 9.00068 0.0825241 8.90995 0.12016C8.81922 0.157796 8.73681 0.212957 8.66742 0.282485L4.99992 3.94248L1.33242 0.274984C1.26299 0.205548 1.18055 0.150468 1.08983 0.112889C0.999108 0.0753106 0.901872 0.0559692 0.803674 0.0559692C0.705476 0.0559692 0.608239 0.0753106 0.517516 0.112889C0.426793 0.150468 0.34436 0.205548 0.274923 0.274984C0.205487 0.344421 0.150407 0.426854 0.112828 0.517577C0.0752495 0.6083 0.0559082 0.705537 0.0559082 0.803735C0.0559082 0.901933 0.0752495 0.999169 0.112828 1.08989C0.150407 1.18062 0.205487 1.26305 0.274923 1.33248L3.94242 4.99998L0.274923 8.66748C0.205487 8.73692 0.150407 8.81935 0.112828 8.91008C0.0752495 9.0008 0.0559082 9.09803 0.0559082 9.19623C0.0559082 9.29443 0.0752495 9.39167 0.112828 9.48239C0.150407 9.57311 0.205487 9.65555 0.274923 9.72498C0.34436 9.79442 0.426793 9.8495 0.517516 9.88708C0.608239 9.92466 0.705476 9.944 0.803674 9.944C0.901872 9.944 0.999108 9.92466 1.08983 9.88708C1.18055 9.8495 1.26299 9.79442 1.33242 9.72498L4.99992 6.05748L8.66742 9.72498C8.73686 9.79442 8.81929 9.8495 8.91002 9.88708C9.00074 9.92466 9.09797 9.944 9.19617 9.944C9.29437 9.944 9.39161 9.92466 9.48233 9.88708C9.57305 9.8495 9.65549 9.79442 9.72492 9.72498C9.79436 9.65555 9.84944 9.57311 9.88702 9.48239C9.9246 9.39167 9.94394 9.29443 9.94394 9.19623C9.94394 9.09803 9.9246 9.0008 9.88702 8.91008C9.84944 8.81935 9.79436 8.73692 9.72492 8.66748L6.05742 4.99998L9.72492 1.33248C10.0099 1.04748 10.0099 0.567485 9.72492 0.282485Z"
+                                  fill={"white"}
+                                />
+                              </svg>
+                              ‏‏‎ ‎‏‏‎ ‎
+                            </strong>
+                          )}
                           {sub}
                         </h1>
                       ))}
@@ -1790,10 +1810,27 @@ export default function Kanban() {
               className={styles.container}
               style={display ? { width: "100%" } : null}
             >
-              <div className={styles.header}>
+              <div
+                className={styles.header}
+                style={
+                  !NotStartedExpand
+                    ? {
+                        backgroundColor:
+                          colormode === "dark" ? "#323339" : "white",
+                        boxShadow:
+                          colormode === "dark"
+                            ? "0px 2px 5px 1px rgba(25,25,25,0.5)"
+                            : "0px 2px 5px 1px rgba(225,225,225,0.5)",
+                        borderRadius: "12px",
+                      }
+                    : null
+                }
+              >
                 <div>
                   <h1 style={{ color: headertitle }}>Not started</h1>
-                  <h3 style={{ color: headertitle }}>0 tasks</h3>
+                  <h3 style={{ color: headertitle }}>
+                    {columns["notStartedTasks"].items.length} tasks
+                  </h3>
                 </div>
                 <div className={styles.icons}>
                   <div>
@@ -1815,7 +1852,7 @@ export default function Kanban() {
                   </div>
                   <div>
                     <svg
-                      onClick={() => console.log("expand button")}
+                      onClick={() => setNotStartedExpand(!NotStartedExpand)}
                       className={styles.expandBtn}
                       width="20"
                       height="20"
@@ -1832,108 +1869,133 @@ export default function Kanban() {
                   </div>
                 </div>
               </div>
-              <Droppable droppableId="notStartedTasks">
-                {(provided) => (
-                  <ul
-                    className={
-                      !display ? styles.addTask : styles.addTaskDisplay
-                    }
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={display ? { marginBottom: "1rem" } : null}
-                  >
-                    {columns["notStartedTasks"].items.length === 0 && (
-                      <li
-                        className={
-                          !display
-                            ? styles.addTaskIcons
-                            : styles.addTaskIconsDisplay
-                        }
-                      >
-                        <svg
-                          width="13"
-                          height="14"
-                          viewBox="0 0 11 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              {NotStartedExpand && (
+                <Droppable droppableId="notStartedTasks">
+                  {(provided) => (
+                    <ul
+                      className={
+                        !display ? styles.addTask : styles.addTaskDisplay
+                      }
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={display ? { marginBottom: "1rem" } : null}
+                    >
+                      {columns["notStartedTasks"].items.length === 0 && (
+                        <li
+                          className={
+                            !display
+                              ? styles.addTaskIcons
+                              : styles.addTaskIconsDisplay
+                          }
                         >
-                          <path
-                            d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
-                            fill={headertitle}
-                            fillOpacity="0.7"
-                          />
-                        </svg>
-
-                        <h1 style={{ color: headertitle }}>Add Task</h1>
-                      </li>
-                    )}
-                    {columns["notStartedTasks"].items.map(
-                      (task, index) =>
-                        // eslint-disable-next-line react/jsx-key
-                        task !== undefined && (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id}
-                            index={index}
+                          <svg
+                            width="13"
+                            height="14"
+                            viewBox="0 0 11 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            {(provided) => (
-                              <li
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={
-                                  !display
-                                    ? view === true
-                                      ? id === task.id
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainer} ${
-                                            colormode === "dark"
-                                              ? styles.colorChange
-                                              : null
-                                          }`
+                            <path
+                              d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
+                              fill={headertitle}
+                              fillOpacity="0.7"
+                            />
+                          </svg>
+
+                          <h1 style={{ color: headertitle }}>Add Task</h1>
+                        </li>
+                      )}
+                      {columns["notStartedTasks"].items.map(
+                        (task, index) =>
+                          // eslint-disable-next-line react/jsx-key
+                          task !== undefined && (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <li
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={
+                                    !display
+                                      ? view === true
+                                        ? id === task.id
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                          : `${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
                                         : `${styles.taskContainer} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
                                           }`
-                                      : `${styles.taskContainer} ${
-                                          colormode === "dark"
-                                            ? styles.colorChange
-                                            : null
-                                        }`
-                                    : view === true
-                                    ? id === task.id
-                                      ? index === 0
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                      : view === true
+                                      ? id === task.id
+                                        ? index === 0
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.first}`
+                                          : index ===
+                                            columns["notStartedTasks"].items
+                                              .length -
+                                              1
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.last}`
+                                          : `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                        : index === 0
+                                        ? `${styles.first} ${
+                                            styles.taskContainerDisplay
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.first}`
+                                          }`
                                         : index ===
                                           columns["notStartedTasks"].items
                                             .length -
                                             1
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                        ? `${styles.taskContainerDisplay} ${
+                                            styles.last
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.last}`
-                                        : `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                          }`
+                                        : `${styles.taskContainerDisplay} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
@@ -1951,324 +2013,319 @@ export default function Kanban() {
                                           .length -
                                           1
                                       ? `${styles.taskContainerDisplay} ${
-                                          styles.last
-                                        } ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
-                                        }`
+                                        }  ${styles.last}`
                                       : `${styles.taskContainerDisplay} ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
                                         }`
-                                    : index === 0
-                                    ? `${styles.first} ${
-                                        styles.taskContainerDisplay
-                                      } ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                    : index ===
-                                      columns["notStartedTasks"].items.length -
-                                        1
-                                    ? `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }  ${styles.last}`
-                                    : `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                }
-                                onClick={() => open(task, task.id)}
-                                key={task.id}
-                              >
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskHeader
-                                      : styles.taskHeaderDisplay
                                   }
+                                  onClick={() => open(task, task.id)}
+                                  key={task.id}
                                 >
-                                  <div>
-                                    <h1
-                                      className={styles.taskTitle}
-                                      style={{ color: headertitle }}
-                                    >
-                                      {task.title}‏‏‎ ‎‏‏‎ ‎
-                                      {task.priority !== "None" && (
-                                        <strong
-                                          style={
-                                            task.priority === "!!"
-                                              ? {
-                                                  color: "#FF5C72",
-                                                  fontSize: "24px",
-                                                }
-                                              : {
-                                                  color: "#FDA076",
-                                                  fontSize: "18px",
-                                                }
-                                          }
-                                        >
-                                          {task.priority}
-                                        </strong>
-                                      )}
-                                    </h1>
-                                  </div>
-                                  <div className={styles.headerInfo}>
-                                    <div style={{ display: "flex" }}>
-                                      <div
-                                        style={{ backgroundColor: "#7A9EFF" }}
-                                      >
-                                        <h1>{task.phase}</h1>
-                                      </div>
-                                      {task.subphase.length !== 0 &&
-                                        task.subphase.map((sub) => (
-                                          <div
-                                            style={{
-                                              backgroundColor: "#C67AFF",
-                                              marginLeft: "0.25rem",
-                                            }}
-                                          >
-                                            <h1>{sub}</h1>
-                                          </div>
-                                        ))}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskBody
-                                      : styles.taskBodyDisplay
-                                  }
-                                >
-                                  {!display && (
-                                    <h1 style={{ color: mainFontColor }}>
-                                      {task.description}
-                                    </h1>
-                                  )}
-
-                                  {!display ? (
-                                    <div className={styles.calendar}>
-                                      <svg
-                                        width="18"
-                                        height="20"
-                                        viewBox="0 0 16 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
-                                          fill={headertitle}
-                                          fillOpacity="0.7"
-                                        />
-                                      </svg>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskHeader
+                                        : styles.taskHeaderDisplay
+                                    }
+                                  >
+                                    <div>
                                       <h1
-                                        className={styles.date}
-                                        style={{ color: mainFontColor }}
+                                        className={styles.taskTitle}
+                                        style={{ color: headertitle }}
                                       >
-                                        {task.startDate} - {task.endDate}
+                                        {task.title}‏‏‎ ‎‏‏‎ ‎
+                                        {task.priority !== "None" && (
+                                          <strong
+                                            style={
+                                              task.priority === "!!"
+                                                ? {
+                                                    color: "#FF5C72",
+                                                    fontSize: "24px",
+                                                  }
+                                                : {
+                                                    color: "#FDA076",
+                                                    fontSize: "18px",
+                                                  }
+                                            }
+                                          >
+                                            {task.priority}
+                                          </strong>
+                                        )}
                                       </h1>
                                     </div>
-                                  ) : (
-                                    <div
-                                      className={styles.imageContainer}
-                                      style={{
-                                        marginLeft: "1rem",
-                                        borderRight:
-                                          "1px solid rgba(0,0,0,0.15)",
-                                      }}
-                                    >
-                                      {task.assignees.map((a) => (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <img
-                                          src={a}
-                                          alt={a}
-                                          className={styles.image}
-                                          style={{
-                                            marginRight: "1rem",
-                                            border:
-                                              "1px solid rgba(0,0,0,0.25)",
-                                            borderRadius: "50%",
-                                          }}
-                                        />
-                                      ))}
+                                    <div className={styles.headerInfo}>
+                                      <div style={{ display: "flex" }}>
+                                        <div
+                                          style={{ backgroundColor: "#7A9EFF" }}
+                                        >
+                                          <h1>{task.phase}</h1>
+                                        </div>
+                                        {task.subphase.length !== 0 &&
+                                          task.subphase.map((sub) => (
+                                            <div
+                                              style={{
+                                                backgroundColor: "#C67AFF",
+                                                marginLeft: "0.25rem",
+                                              }}
+                                            >
+                                              <h1>{sub}</h1>
+                                            </div>
+                                          ))}
+                                      </div>
                                     </div>
-                                  )}
+                                  </div>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskBody
+                                        : styles.taskBodyDisplay
+                                    }
+                                  >
+                                    {!display && (
+                                      <h1 style={{ color: mainFontColor }}>
+                                        {task.description}
+                                      </h1>
+                                    )}
 
-                                  {!display ? (
-                                    <div className={styles.footer}>
-                                      <div className={styles.imageContainer}>
+                                    {!display ? (
+                                      <div className={styles.calendar}>
+                                        <svg
+                                          width="18"
+                                          height="20"
+                                          viewBox="0 0 16 18"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
+                                            fill={headertitle}
+                                            fillOpacity="0.7"
+                                          />
+                                        </svg>
+                                        <h1
+                                          className={styles.date}
+                                          style={{ color: mainFontColor }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className={styles.imageContainer}
+                                        style={{
+                                          marginLeft: "1rem",
+                                          borderRight:
+                                            "1px solid rgba(0,0,0,0.15)",
+                                        }}
+                                      >
                                         {task.assignees.map((a) => (
                                           // eslint-disable-next-line react/jsx-key
                                           <img
                                             src={a}
                                             alt={a}
                                             className={styles.image}
+                                            style={{
+                                              marginRight: "1rem",
+                                              border:
+                                                "1px solid rgba(0,0,0,0.25)",
+                                              borderRadius: "50%",
+                                            }}
                                           />
                                         ))}
                                       </div>
-                                      <div className={styles.actions}>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="12"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
+                                    )}
+
+                                    {!display ? (
+                                      <div className={styles.footer}>
+                                        <div className={styles.imageContainer}>
+                                          {task.assignees.map((a) => (
+                                            // eslint-disable-next-line react/jsx-key
+                                            <img
+                                              src={a}
+                                              alt={a}
+                                              className={styles.image}
                                             />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
+                                          ))}
                                         </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="16"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className={styles.calendarDisplay}>
-                                      <h1
-                                        className={styles.dateDisplay}
-                                        style={{
-                                          textAlign: "center",
-                                          color: headertitle,
-                                        }}
-                                      >
-                                        {task.startDate} - {task.endDate}
-                                      </h1>
-                                    </div>
-                                  )}
-                                  {display && (
-                                    <div className={styles.buttonsDisplay}>
-                                      <div className={styles.actionsDisplay}>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="15"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="19"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="19"
-                                            height="19"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
+                                        <div className={styles.actions}>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="12"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="16"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="16"
+                                              height="16"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </li>
-                            )}
-                          </Draggable>
-                        )
-                    )}
-                  </ul>
-                )}
-              </Droppable>
+                                    ) : (
+                                      <div className={styles.calendarDisplay}>
+                                        <h1
+                                          className={styles.dateDisplay}
+                                          style={{
+                                            textAlign: "center",
+                                            color: headertitle,
+                                          }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    )}
+                                    {display && (
+                                      <div className={styles.buttonsDisplay}>
+                                        <div className={styles.actionsDisplay}>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="15"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="19"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="19"
+                                              height="19"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </li>
+                              )}
+                            </Draggable>
+                          )
+                      )}
+                    </ul>
+                  )}
+                </Droppable>
+              )}
             </div>
             <div
               className={styles.container}
               style={display ? { width: "100%" } : null}
             >
-              <div className={styles.header}>
+              <div
+                className={styles.header}
+                style={
+                  !InProgressExpand
+                    ? {
+                        backgroundColor:
+                          colormode === "dark" ? "#323339" : "white",
+                        boxShadow:
+                          colormode === "dark"
+                            ? "0px 2px 5px 1px rgba(25,25,25,0.5)"
+                            : "0px 2px 5px 1px rgba(225,225,225,0.5)",
+                        borderRadius: "12px",
+                      }
+                    : null
+                }
+              >
                 <div>
                   <h1 style={{ color: headertitle }}>In Progress</h1>
-                  <h3 style={{ color: headertitle }}>0 tasks</h3>
+                  <h3 style={{ color: headertitle }}>
+                    {columns["inProgressTasks"].items.length} tasks
+                  </h3>
                 </div>
                 <div className={styles.icons}>
                   <div>
@@ -2290,7 +2347,7 @@ export default function Kanban() {
                   </div>
                   <div>
                     <svg
-                      onClick={() => console.log("expand button")}
+                      onClick={() => setInProgressExpand(!InProgressExpand)}
                       className={styles.expandBtn}
                       width="20"
                       height="20"
@@ -2307,108 +2364,133 @@ export default function Kanban() {
                   </div>
                 </div>
               </div>
-              <Droppable droppableId="inProgressTasks">
-                {(provided) => (
-                  <ul
-                    className={
-                      !display ? styles.addTask : styles.addTaskDisplay
-                    }
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={display ? { marginBottom: "1rem" } : null}
-                  >
-                    {columns["inProgressTasks"].items.length === 0 && (
-                      <li
-                        className={
-                          !display
-                            ? styles.addTaskIcons
-                            : styles.addTaskIconsDisplay
-                        }
-                      >
-                        <svg
-                          width="13"
-                          height="14"
-                          viewBox="0 0 11 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              {InProgressExpand && (
+                <Droppable droppableId="inProgressTasks">
+                  {(provided) => (
+                    <ul
+                      className={
+                        !display ? styles.addTask : styles.addTaskDisplay
+                      }
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={display ? { marginBottom: "1rem" } : null}
+                    >
+                      {columns["inProgressTasks"].items.length === 0 && (
+                        <li
+                          className={
+                            !display
+                              ? styles.addTaskIcons
+                              : styles.addTaskIconsDisplay
+                          }
                         >
-                          <path
-                            d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
-                            fill={headertitle}
-                            fillOpacity="0.7"
-                          />
-                        </svg>
-
-                        <h1 style={{ color: headertitle }}>Add Task</h1>
-                      </li>
-                    )}
-                    {columns["inProgressTasks"].items.map(
-                      (task, index) =>
-                        // eslint-disable-next-line react/jsx-key
-                        task !== undefined && (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id}
-                            index={index}
+                          <svg
+                            width="13"
+                            height="14"
+                            viewBox="0 0 11 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            {(provided) => (
-                              <li
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={
-                                  !display
-                                    ? view === true
-                                      ? id === task.id
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainer} ${
-                                            colormode === "dark"
-                                              ? styles.colorChange
-                                              : null
-                                          }`
+                            <path
+                              d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
+                              fill={headertitle}
+                              fillOpacity="0.7"
+                            />
+                          </svg>
+
+                          <h1 style={{ color: headertitle }}>Add Task</h1>
+                        </li>
+                      )}
+                      {columns["inProgressTasks"].items.map(
+                        (task, index) =>
+                          // eslint-disable-next-line react/jsx-key
+                          task !== undefined && (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <li
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={
+                                    !display
+                                      ? view === true
+                                        ? id === task.id
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                          : `${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
                                         : `${styles.taskContainer} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
                                           }`
-                                      : `${styles.taskContainer} ${
-                                          colormode === "dark"
-                                            ? styles.colorChange
-                                            : null
-                                        }`
-                                    : view === true
-                                    ? id === task.id
-                                      ? index === 0
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                      : view === true
+                                      ? id === task.id
+                                        ? index === 0
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.first}`
+                                          : index ===
+                                            columns["notStartedTasks"].items
+                                              .length -
+                                              1
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.last}`
+                                          : `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                        : index === 0
+                                        ? `${styles.first} ${
+                                            styles.taskContainerDisplay
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.first}`
+                                          }`
                                         : index ===
                                           columns["notStartedTasks"].items
                                             .length -
                                             1
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                        ? `${styles.taskContainerDisplay} ${
+                                            styles.last
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.last}`
-                                        : `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                          }`
+                                        : `${styles.taskContainerDisplay} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
@@ -2426,324 +2508,319 @@ export default function Kanban() {
                                           .length -
                                           1
                                       ? `${styles.taskContainerDisplay} ${
-                                          styles.last
-                                        } ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
-                                        }`
+                                        }  ${styles.last}`
                                       : `${styles.taskContainerDisplay} ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
                                         }`
-                                    : index === 0
-                                    ? `${styles.first} ${
-                                        styles.taskContainerDisplay
-                                      } ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                    : index ===
-                                      columns["notStartedTasks"].items.length -
-                                        1
-                                    ? `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }  ${styles.last}`
-                                    : `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                }
-                                onClick={() => open(task, task.id)}
-                                key={task.id}
-                              >
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskHeader
-                                      : styles.taskHeaderDisplay
                                   }
+                                  onClick={() => open(task, task.id)}
+                                  key={task.id}
                                 >
-                                  <div>
-                                    <h1
-                                      className={styles.taskTitle}
-                                      style={{ color: headertitle }}
-                                    >
-                                      {task.title}‏‏‎ ‎‏‏‎ ‎
-                                      {task.priority !== "None" && (
-                                        <strong
-                                          style={
-                                            task.priority === "!!"
-                                              ? {
-                                                  color: "#FF5C72",
-                                                  fontSize: "24px",
-                                                }
-                                              : {
-                                                  color: "#FDA076",
-                                                  fontSize: "18px",
-                                                }
-                                          }
-                                        >
-                                          {task.priority}
-                                        </strong>
-                                      )}
-                                    </h1>
-                                  </div>
-                                  <div className={styles.headerInfo}>
-                                    <div style={{ display: "flex" }}>
-                                      <div
-                                        style={{ backgroundColor: "#7A9EFF" }}
-                                      >
-                                        <h1>{task.phase}</h1>
-                                      </div>
-                                      {task.subphase.length !== 0 &&
-                                        task.subphase.map((sub) => (
-                                          <div
-                                            style={{
-                                              backgroundColor: "#C67AFF",
-                                              marginLeft: "0.25rem",
-                                            }}
-                                          >
-                                            <h1>{sub}</h1>
-                                          </div>
-                                        ))}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskBody
-                                      : styles.taskBodyDisplay
-                                  }
-                                >
-                                  {!display && (
-                                    <h1 style={{ color: mainFontColor }}>
-                                      {task.description}
-                                    </h1>
-                                  )}
-
-                                  {!display ? (
-                                    <div className={styles.calendar}>
-                                      <svg
-                                        width="18"
-                                        height="20"
-                                        viewBox="0 0 16 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
-                                          fill={headertitle}
-                                          fillOpacity="0.7"
-                                        />
-                                      </svg>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskHeader
+                                        : styles.taskHeaderDisplay
+                                    }
+                                  >
+                                    <div>
                                       <h1
-                                        className={styles.date}
-                                        style={{ color: mainFontColor }}
+                                        className={styles.taskTitle}
+                                        style={{ color: headertitle }}
                                       >
-                                        {task.startDate} - {task.endDate}
+                                        {task.title}‏‏‎ ‎‏‏‎ ‎
+                                        {task.priority !== "None" && (
+                                          <strong
+                                            style={
+                                              task.priority === "!!"
+                                                ? {
+                                                    color: "#FF5C72",
+                                                    fontSize: "24px",
+                                                  }
+                                                : {
+                                                    color: "#FDA076",
+                                                    fontSize: "18px",
+                                                  }
+                                            }
+                                          >
+                                            {task.priority}
+                                          </strong>
+                                        )}
                                       </h1>
                                     </div>
-                                  ) : (
-                                    <div
-                                      className={styles.imageContainer}
-                                      style={{
-                                        marginLeft: "1rem",
-                                        borderRight:
-                                          "1px solid rgba(0,0,0,0.15)",
-                                      }}
-                                    >
-                                      {task.assignees.map((a) => (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <img
-                                          src={a}
-                                          alt={a}
-                                          className={styles.image}
-                                          style={{
-                                            marginRight: "1rem",
-                                            border:
-                                              "1px solid rgba(0,0,0,0.25)",
-                                            borderRadius: "50%",
-                                          }}
-                                        />
-                                      ))}
+                                    <div className={styles.headerInfo}>
+                                      <div style={{ display: "flex" }}>
+                                        <div
+                                          style={{ backgroundColor: "#7A9EFF" }}
+                                        >
+                                          <h1>{task.phase}</h1>
+                                        </div>
+                                        {task.subphase.length !== 0 &&
+                                          task.subphase.map((sub) => (
+                                            <div
+                                              style={{
+                                                backgroundColor: "#C67AFF",
+                                                marginLeft: "0.25rem",
+                                              }}
+                                            >
+                                              <h1>{sub}</h1>
+                                            </div>
+                                          ))}
+                                      </div>
                                     </div>
-                                  )}
+                                  </div>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskBody
+                                        : styles.taskBodyDisplay
+                                    }
+                                  >
+                                    {!display && (
+                                      <h1 style={{ color: mainFontColor }}>
+                                        {task.description}
+                                      </h1>
+                                    )}
 
-                                  {!display ? (
-                                    <div className={styles.footer}>
-                                      <div className={styles.imageContainer}>
+                                    {!display ? (
+                                      <div className={styles.calendar}>
+                                        <svg
+                                          width="18"
+                                          height="20"
+                                          viewBox="0 0 16 18"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
+                                            fill={headertitle}
+                                            fillOpacity="0.7"
+                                          />
+                                        </svg>
+                                        <h1
+                                          className={styles.date}
+                                          style={{ color: mainFontColor }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className={styles.imageContainer}
+                                        style={{
+                                          marginLeft: "1rem",
+                                          borderRight:
+                                            "1px solid rgba(0,0,0,0.15)",
+                                        }}
+                                      >
                                         {task.assignees.map((a) => (
                                           // eslint-disable-next-line react/jsx-key
                                           <img
                                             src={a}
                                             alt={a}
                                             className={styles.image}
+                                            style={{
+                                              marginRight: "1rem",
+                                              border:
+                                                "1px solid rgba(0,0,0,0.25)",
+                                              borderRadius: "50%",
+                                            }}
                                           />
                                         ))}
                                       </div>
-                                      <div className={styles.actions}>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="12"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
+                                    )}
+
+                                    {!display ? (
+                                      <div className={styles.footer}>
+                                        <div className={styles.imageContainer}>
+                                          {task.assignees.map((a) => (
+                                            // eslint-disable-next-line react/jsx-key
+                                            <img
+                                              src={a}
+                                              alt={a}
+                                              className={styles.image}
                                             />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
+                                          ))}
                                         </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="16"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className={styles.calendarDisplay}>
-                                      <h1
-                                        className={styles.dateDisplay}
-                                        style={{
-                                          textAlign: "center",
-                                          color: headertitle,
-                                        }}
-                                      >
-                                        {task.startDate} - {task.endDate}
-                                      </h1>
-                                    </div>
-                                  )}
-                                  {display && (
-                                    <div className={styles.buttonsDisplay}>
-                                      <div className={styles.actionsDisplay}>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="15"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="19"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="19"
-                                            height="19"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
+                                        <div className={styles.actions}>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="12"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="16"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="16"
+                                              height="16"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </li>
-                            )}
-                          </Draggable>
-                        )
-                    )}
-                  </ul>
-                )}
-              </Droppable>
+                                    ) : (
+                                      <div className={styles.calendarDisplay}>
+                                        <h1
+                                          className={styles.dateDisplay}
+                                          style={{
+                                            textAlign: "center",
+                                            color: headertitle,
+                                          }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    )}
+                                    {display && (
+                                      <div className={styles.buttonsDisplay}>
+                                        <div className={styles.actionsDisplay}>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="15"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="19"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="19"
+                                              height="19"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </li>
+                              )}
+                            </Draggable>
+                          )
+                      )}
+                    </ul>
+                  )}
+                </Droppable>
+              )}
             </div>
             <div
               className={styles.container}
               style={display ? { width: "100%" } : null}
             >
-              <div className={styles.header}>
+              <div
+                className={styles.header}
+                style={
+                  !DoneExpand
+                    ? {
+                        backgroundColor:
+                          colormode === "dark" ? "#323339" : "white",
+                        boxShadow:
+                          colormode === "dark"
+                            ? "0px 2px 5px 1px rgba(25,25,25,0.5)"
+                            : "0px 2px 5px 1px rgba(225,225,225,0.5)",
+                        borderRadius: "12px",
+                      }
+                    : null
+                }
+              >
                 <div>
                   <h1 style={{ color: headertitle }}>Done</h1>
-                  <h3 style={{ color: headertitle }}>0 tasks</h3>
+                  <h3 style={{ color: headertitle }}>
+                    {columns["doneTasks"].items.length} tasks
+                  </h3>
                 </div>
                 <div className={styles.icons}>
                   <div>
@@ -2765,7 +2842,7 @@ export default function Kanban() {
                   </div>
                   <div>
                     <svg
-                      onClick={() => console.log("expand button")}
+                      onClick={() => setDoneExpand(!DoneExpand)}
                       className={styles.expandBtn}
                       width="20"
                       height="20"
@@ -2782,108 +2859,133 @@ export default function Kanban() {
                   </div>
                 </div>
               </div>
-              <Droppable droppableId="doneTasks">
-                {(provided) => (
-                  <ul
-                    className={
-                      !display ? styles.addTask : styles.addTaskDisplay
-                    }
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={display ? { marginBottom: "1rem" } : null}
-                  >
-                    {columns["doneTasks"].items.length === 0 && (
-                      <li
-                        className={
-                          !display
-                            ? styles.addTaskIcons
-                            : styles.addTaskIconsDisplay
-                        }
-                      >
-                        <svg
-                          width="13"
-                          height="14"
-                          viewBox="0 0 11 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              {DoneExpand && (
+                <Droppable droppableId="doneTasks">
+                  {(provided) => (
+                    <ul
+                      className={
+                        !display ? styles.addTask : styles.addTaskDisplay
+                      }
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={display ? { marginBottom: "1rem" } : null}
+                    >
+                      {columns["doneTasks"].items.length === 0 && (
+                        <li
+                          className={
+                            !display
+                              ? styles.addTaskIcons
+                              : styles.addTaskIconsDisplay
+                          }
                         >
-                          <path
-                            d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
-                            fill={headertitle}
-                            fillOpacity="0.7"
-                          />
-                        </svg>
-
-                        <h1 style={{ color: headertitle }}>Add Task</h1>
-                      </li>
-                    )}
-                    {columns["doneTasks"].items.map(
-                      (task, index) =>
-                        // eslint-disable-next-line react/jsx-key
-                        task !== undefined && (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id}
-                            index={index}
+                          <svg
+                            width="13"
+                            height="14"
+                            viewBox="0 0 11 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                            {(provided) => (
-                              <li
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={
-                                  !display
-                                    ? view === true
-                                      ? id === task.id
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainer} ${
-                                            colormode === "dark"
-                                              ? styles.colorChange
-                                              : null
-                                          }`
+                            <path
+                              d="M10 6.75H6.25V10.5C6.25 10.9125 5.9125 11.25 5.5 11.25C5.0875 11.25 4.75 10.9125 4.75 10.5V6.75H1C0.5875 6.75 0.25 6.4125 0.25 6C0.25 5.5875 0.5875 5.25 1 5.25H4.75V1.5C4.75 1.0875 5.0875 0.75 5.5 0.75C5.9125 0.75 6.25 1.0875 6.25 1.5V5.25H10C10.4125 5.25 10.75 5.5875 10.75 6C10.75 6.4125 10.4125 6.75 10 6.75Z"
+                              fill={headertitle}
+                              fillOpacity="0.7"
+                            />
+                          </svg>
+
+                          <h1 style={{ color: headertitle }}>Add Task</h1>
+                        </li>
+                      )}
+                      {columns["doneTasks"].items.map(
+                        (task, index) =>
+                          // eslint-disable-next-line react/jsx-key
+                          task !== undefined && (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <li
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={
+                                    !display
+                                      ? view === true
+                                        ? id === task.id
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                          : `${styles.taskContainer} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
                                         : `${styles.taskContainer} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
                                           }`
-                                      : `${styles.taskContainer} ${
-                                          colormode === "dark"
-                                            ? styles.colorChange
-                                            : null
-                                        }`
-                                    : view === true
-                                    ? id === task.id
-                                      ? index === 0
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                      : view === true
+                                      ? id === task.id
+                                        ? index === 0
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.first}`
+                                          : index ===
+                                            columns["notStartedTasks"].items
+                                              .length -
+                                              1
+                                          ? `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            } ${styles.last}`
+                                          : `${
+                                              colormode === "light"
+                                                ? styles.blue
+                                                : styles.black
+                                            } ${styles.taskContainerDisplay} ${
+                                              colormode === "dark"
+                                                ? styles.colorChange
+                                                : null
+                                            }`
+                                        : index === 0
+                                        ? `${styles.first} ${
+                                            styles.taskContainerDisplay
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.first}`
+                                          }`
                                         : index ===
                                           columns["notStartedTasks"].items
                                             .length -
                                             1
-                                        ? `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                        ? `${styles.taskContainerDisplay} ${
+                                            styles.last
+                                          } ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
-                                          } ${styles.last}`
-                                        : `${
-                                            colormode === "light"
-                                              ? styles.blue
-                                              : styles.black
-                                          } ${styles.taskContainerDisplay} ${
+                                          }`
+                                        : `${styles.taskContainerDisplay} ${
                                             colormode === "dark"
                                               ? styles.colorChange
                                               : null
@@ -2901,315 +3003,293 @@ export default function Kanban() {
                                           .length -
                                           1
                                       ? `${styles.taskContainerDisplay} ${
-                                          styles.last
-                                        } ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
-                                        }`
+                                        }  ${styles.last}`
                                       : `${styles.taskContainerDisplay} ${
                                           colormode === "dark"
                                             ? styles.colorChange
                                             : null
                                         }`
-                                    : index === 0
-                                    ? `${styles.first} ${
-                                        styles.taskContainerDisplay
-                                      } ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                    : index ===
-                                      columns["notStartedTasks"].items.length -
-                                        1
-                                    ? `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }  ${styles.last}`
-                                    : `${styles.taskContainerDisplay} ${
-                                        colormode === "dark"
-                                          ? styles.colorChange
-                                          : null
-                                      }`
-                                }
-                                onClick={() => open(task, task.id)}
-                                key={task.id}
-                              >
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskHeader
-                                      : styles.taskHeaderDisplay
                                   }
+                                  onClick={() => open(task, task.id)}
+                                  key={task.id}
                                 >
-                                  <div>
-                                    <h1
-                                      className={styles.taskTitle}
-                                      style={{ color: headertitle }}
-                                    >
-                                      {task.title}‏‏‎ ‎‏‏‎ ‎
-                                      {task.priority !== "None" && (
-                                        <strong
-                                          style={
-                                            task.priority === "!!"
-                                              ? {
-                                                  color: "#FF5C72",
-                                                  fontSize: "24px",
-                                                }
-                                              : {
-                                                  color: "#FDA076",
-                                                  fontSize: "18px",
-                                                }
-                                          }
-                                        >
-                                          {task.priority}
-                                        </strong>
-                                      )}
-                                    </h1>
-                                  </div>
-                                  <div className={styles.headerInfo}>
-                                    <div style={{ display: "flex" }}>
-                                      <div
-                                        style={{ backgroundColor: "#7A9EFF" }}
-                                      >
-                                        <h1>{task.phase}</h1>
-                                      </div>
-                                      {task.subphase.length !== 0 &&
-                                        task.subphase.map((sub) => (
-                                          <div
-                                            style={{
-                                              backgroundColor: "#C67AFF",
-                                              marginLeft: "0.25rem",
-                                            }}
-                                          >
-                                            <h1>{sub}</h1>
-                                          </div>
-                                        ))}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div
-                                  className={
-                                    !display
-                                      ? styles.taskBody
-                                      : styles.taskBodyDisplay
-                                  }
-                                >
-                                  {!display && (
-                                    <h1 style={{ color: mainFontColor }}>
-                                      {task.description}
-                                    </h1>
-                                  )}
-
-                                  {!display ? (
-                                    <div className={styles.calendar}>
-                                      <svg
-                                        width="18"
-                                        height="20"
-                                        viewBox="0 0 16 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
-                                          fill={headertitle}
-                                          fillOpacity="0.7"
-                                        />
-                                      </svg>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskHeader
+                                        : styles.taskHeaderDisplay
+                                    }
+                                  >
+                                    <div>
                                       <h1
-                                        className={styles.date}
-                                        style={{ color: mainFontColor }}
+                                        className={styles.taskTitle}
+                                        style={{ color: headertitle }}
                                       >
-                                        {task.startDate} - {task.endDate}
+                                        {task.title}‏‏‎ ‎‏‏‎ ‎
+                                        {task.priority !== "None" && (
+                                          <strong
+                                            style={
+                                              task.priority === "!!"
+                                                ? {
+                                                    color: "#FF5C72",
+                                                    fontSize: "24px",
+                                                  }
+                                                : {
+                                                    color: "#FDA076",
+                                                    fontSize: "18px",
+                                                  }
+                                            }
+                                          >
+                                            {task.priority}
+                                          </strong>
+                                        )}
                                       </h1>
                                     </div>
-                                  ) : (
-                                    <div
-                                      className={styles.imageContainer}
-                                      style={{
-                                        marginLeft: "1rem",
-                                        borderRight:
-                                          "1px solid rgba(0,0,0,0.15)",
-                                      }}
-                                    >
-                                      {task.assignees.map((a) => (
-                                        // eslint-disable-next-line react/jsx-key
-                                        <img
-                                          src={a}
-                                          alt={a}
-                                          className={styles.image}
-                                          style={{
-                                            marginRight: "1rem",
-                                            border:
-                                              "1px solid rgba(0,0,0,0.25)",
-                                            borderRadius: "50%",
-                                          }}
-                                        />
-                                      ))}
+                                    <div className={styles.headerInfo}>
+                                      <div style={{ display: "flex" }}>
+                                        <div
+                                          style={{ backgroundColor: "#7A9EFF" }}
+                                        >
+                                          <h1>{task.phase}</h1>
+                                        </div>
+                                        {task.subphase.length !== 0 &&
+                                          task.subphase.map((sub) => (
+                                            <div
+                                              style={{
+                                                backgroundColor: "#C67AFF",
+                                                marginLeft: "0.25rem",
+                                              }}
+                                            >
+                                              <h1>{sub}</h1>
+                                            </div>
+                                          ))}
+                                      </div>
                                     </div>
-                                  )}
+                                  </div>
+                                  <div
+                                    className={
+                                      !display
+                                        ? styles.taskBody
+                                        : styles.taskBodyDisplay
+                                    }
+                                  >
+                                    {!display && (
+                                      <h1 style={{ color: mainFontColor }}>
+                                        {task.description}
+                                      </h1>
+                                    )}
 
-                                  {!display ? (
-                                    <div className={styles.footer}>
-                                      <div className={styles.imageContainer}>
+                                    {!display ? (
+                                      <div className={styles.calendar}>
+                                        <svg
+                                          width="18"
+                                          height="20"
+                                          viewBox="0 0 16 18"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M14 2.25H13.25V1.5C13.25 1.0875 12.9125 0.75 12.5 0.75C12.0875 0.75 11.75 1.0875 11.75 1.5V2.25H4.25V1.5C4.25 1.0875 3.9125 0.75 3.5 0.75C3.0875 0.75 2.75 1.0875 2.75 1.5V2.25H2C1.175 2.25 0.5 2.925 0.5 3.75V15.75C0.5 16.575 1.175 17.25 2 17.25H14C14.825 17.25 15.5 16.575 15.5 15.75V3.75C15.5 2.925 14.825 2.25 14 2.25ZM13.25 15.75H2.75C2.3375 15.75 2 15.4125 2 15V6H14V15C14 15.4125 13.6625 15.75 13.25 15.75Z"
+                                            fill={headertitle}
+                                            fillOpacity="0.7"
+                                          />
+                                        </svg>
+                                        <h1
+                                          className={styles.date}
+                                          style={{ color: mainFontColor }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className={styles.imageContainer}
+                                        style={{
+                                          marginLeft: "1rem",
+                                          borderRight:
+                                            "1px solid rgba(0,0,0,0.15)",
+                                        }}
+                                      >
                                         {task.assignees.map((a) => (
                                           // eslint-disable-next-line react/jsx-key
                                           <img
                                             src={a}
                                             alt={a}
                                             className={styles.image}
+                                            style={{
+                                              marginRight: "1rem",
+                                              border:
+                                                "1px solid rgba(0,0,0,0.25)",
+                                              borderRadius: "50%",
+                                            }}
                                           />
                                         ))}
                                       </div>
-                                      <div className={styles.actions}>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="12"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
+                                    )}
+
+                                    {!display ? (
+                                      <div className={styles.footer}>
+                                        <div className={styles.imageContainer}>
+                                          {task.assignees.map((a) => (
+                                            // eslint-disable-next-line react/jsx-key
+                                            <img
+                                              src={a}
+                                              alt={a}
+                                              className={styles.image}
                                             />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
+                                          ))}
                                         </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="15"
-                                            height="16"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.action}>
-                                          <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className={styles.calendarDisplay}>
-                                      <h1
-                                        className={styles.dateDisplay}
-                                        style={{
-                                          textAlign: "center",
-                                          color: headertitle,
-                                        }}
-                                      >
-                                        {task.startDate} - {task.endDate}
-                                      </h1>
-                                    </div>
-                                  )}
-                                  {display && (
-                                    <div className={styles.buttonsDisplay}>
-                                      <div className={styles.actionsDisplay}>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="15"
-                                            viewBox="0 0 15 12"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            3
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="18"
-                                            height="19"
-                                            viewBox="0 0 15 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
-                                        </div>
-                                        <div className={styles.actionDisplay}>
-                                          <svg
-                                            width="19"
-                                            height="19"
-                                            viewBox="0 0 16 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fillRule="evenodd"
-                                              clipRule="evenodd"
-                                              d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
-                                              fill={headertitle}
-                                              fillOpacity="0.7"
-                                            />
-                                          </svg>
-                                          <h1 style={{ color: headertitle }}>
-                                            8
-                                          </h1>
+                                        <div className={styles.actions}>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="12"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="15"
+                                              height="16"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.action}>
+                                            <svg
+                                              width="16"
+                                              height="16"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </li>
-                            )}
-                          </Draggable>
-                        )
-                    )}
-                  </ul>
-                )}
-              </Droppable>
+                                    ) : (
+                                      <div className={styles.calendarDisplay}>
+                                        <h1
+                                          className={styles.dateDisplay}
+                                          style={{
+                                            textAlign: "center",
+                                            color: headertitle,
+                                          }}
+                                        >
+                                          {task.startDate} - {task.endDate}
+                                        </h1>
+                                      </div>
+                                    )}
+                                    {display && (
+                                      <div className={styles.buttonsDisplay}>
+                                        <div className={styles.actionsDisplay}>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="15"
+                                              viewBox="0 0 15 12"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M2 4.875C1.3775 4.875 0.875 5.3775 0.875 6C0.875 6.6225 1.3775 7.125 2 7.125C2.6225 7.125 3.125 6.6225 3.125 6C3.125 5.3775 2.6225 4.875 2 4.875ZM2 0.375C1.3775 0.375 0.875 0.8775 0.875 1.5C0.875 2.1225 1.3775 2.625 2 2.625C2.6225 2.625 3.125 2.1225 3.125 1.5C3.125 0.8775 2.6225 0.375 2 0.375ZM2 9.375C1.3775 9.375 0.875 9.885 0.875 10.5C0.875 11.115 1.385 11.625 2 11.625C2.615 11.625 3.125 11.115 3.125 10.5C3.125 9.885 2.6225 9.375 2 9.375ZM5 11.25H14C14.4125 11.25 14.75 10.9125 14.75 10.5C14.75 10.0875 14.4125 9.75 14 9.75H5C4.5875 9.75 4.25 10.0875 4.25 10.5C4.25 10.9125 4.5875 11.25 5 11.25ZM5 6.75H14C14.4125 6.75 14.75 6.4125 14.75 6C14.75 5.5875 14.4125 5.25 14 5.25H5C4.5875 5.25 4.25 5.5875 4.25 6C4.25 6.4125 4.5875 6.75 5 6.75ZM4.25 1.5C4.25 1.9125 4.5875 2.25 5 2.25H14C14.4125 2.25 14.75 1.9125 14.75 1.5C14.75 1.0875 14.4125 0.75 14 0.75H5C4.5875 0.75 4.25 1.0875 4.25 1.5Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              3
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="18"
+                                              height="19"
+                                              viewBox="0 0 15 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M10.2753 1.93652C9.7757 1.93652 9.29655 2.13499 8.94326 2.48828L2.89547 8.53607C2.29522 9.13632 1.95801 9.95043 1.95801 10.7993C1.95801 11.6482 2.29522 12.4623 2.89547 13.0625C3.49572 13.6628 4.30983 14 5.15871 14C6.00759 14 6.8217 13.6628 7.42195 13.0625L13.4697 7.01475C13.7626 6.72186 14.2375 6.72186 14.5304 7.01475C14.8233 7.30764 14.8233 7.78252 14.5304 8.07541L8.4826 14.1232C7.60105 15.0048 6.40541 15.5 5.15871 15.5C3.912 15.5 2.71636 15.0048 1.83481 14.1232C0.953259 13.2416 0.458008 12.046 0.458008 10.7993C0.458008 9.5526 0.953259 8.35696 1.83481 7.47541L7.8826 1.42762C8.51719 0.79303 9.37787 0.436523 10.2753 0.436523C11.1728 0.436523 12.0334 0.79303 12.668 1.42762C13.3026 2.0622 13.6591 2.92288 13.6591 3.82032C13.6591 4.71776 13.3026 5.57845 12.668 6.21303L6.61365 12.2608C6.22603 12.6484 5.7003 12.8662 5.15213 12.8662C4.60395 12.8662 4.07823 12.6484 3.69061 12.2608C3.30299 11.8732 3.08523 11.3475 3.08523 10.7993C3.08523 10.2511 3.30299 9.7254 3.69061 9.33779L9.27805 3.75692C9.57112 3.4642 10.046 3.46448 10.3387 3.75755C10.6314 4.05061 10.6312 4.52548 10.3381 4.8182L4.75127 10.3984C4.64515 10.5047 4.58523 10.6491 4.58523 10.7993C4.58523 10.9497 4.64495 11.0938 4.75127 11.2002C4.85758 11.3065 5.00178 11.3662 5.15213 11.3662C5.30248 11.3662 5.44667 11.3065 5.55299 11.2002L11.6074 5.15237C11.6075 5.15228 11.6073 5.15247 11.6074 5.15237C11.9605 4.79912 12.1591 4.3198 12.1591 3.82032C12.1591 3.32071 11.9606 2.84156 11.6074 2.48828C11.2541 2.13499 10.7749 1.93652 10.2753 1.93652Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                          <div className={styles.actionDisplay}>
+                                            <svg
+                                              width="19"
+                                              height="19"
+                                              viewBox="0 0 16 16"
+                                              fill="none"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fillRule="evenodd"
+                                                clipRule="evenodd"
+                                                d="M0.54275 14.4995L1.868 10.5252L1.865 10.52C1.46975 9.63575 1.25 8.6555 1.25 7.625C1.25 3.69275 4.44275 0.5 8.375 0.5C12.3073 0.5 15.5 3.69275 15.5 7.625C15.5 11.5573 12.3073 14.75 8.375 14.75C7.3445 14.75 6.365 14.5303 5.47775 14.135L5.47475 14.1343C4.55825 14.438 1.721 15.3838 1.5005 15.4573C1.4225 15.485 1.33775 15.5 1.25 15.5C0.836 15.5 0.5 15.164 0.5 14.75C0.5 14.6622 0.515 14.5775 0.54275 14.4995ZM8.375 2C11.4792 2 14 4.52075 14 7.625C14 10.7292 11.4792 13.25 8.375 13.25C7.562 13.25 6.78875 13.0775 6.0905 12.7662C5.75225 12.6117 5.36075 12.5915 5.0015 12.7108C4.487 12.8818 3.3605 13.256 2.43575 13.5643L3.29075 10.9985C3.41075 10.6385 3.38975 10.247 3.23225 9.90275C2.9225 9.2105 2.75 8.438 2.75 7.625C2.75 4.52075 5.27075 2 8.375 2Z"
+                                                fill={headertitle}
+                                                fillOpacity="0.7"
+                                              />
+                                            </svg>
+                                            <h1 style={{ color: headertitle }}>
+                                              8
+                                            </h1>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </li>
+                              )}
+                            </Draggable>
+                          )
+                      )}
+                    </ul>
+                  )}
+                </Droppable>
+              )}
             </div>
           </DragDropContext>
         </div>
