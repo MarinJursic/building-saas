@@ -17,7 +17,7 @@
     "axios": "^0.21.2",
     "framer-motion": "^4.1.17",
     "frappe-gantt-react": "^0.2.2",
-    "frappe-new-gantt": "^0.2.2",
+    "frappe-new-gantt": "^0.2.3",
     "moment": "^2.29.1",
     "next": "11.1.0",
     "next-redux-wrapper": "^7.0.4",
