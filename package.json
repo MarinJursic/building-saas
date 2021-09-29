@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "patch-package"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.4.1",
@@ -23,7 +22,6 @@
     "next-redux-wrapper": "^7.0.4",
     "next-transpile-modules": "^8.0.0",
     "nprogress": "^0.2.0",
-    "patch-package": "^6.4.7",
     "react": "17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-detect-click-outside": "^1.1.1",
