@@ -6,7 +6,7 @@ import GanttNavbar from "./GanttNavbar/GanttNavbar";
 import styles from "../../styles/Gantt.module.scss";
 import GanttPlaceholder from "./GanttPlaceholder/GanttPlaceholder";
 
-import { FrappeGantt as GanttMonth } from "../../node_modules/frappe-gantt-reactVersion2";
+import { FrappeGantt as GanttMonth } from "../../node_modules/frappe-new-gantt";
 
 import { useSelector } from "react-redux";
 
