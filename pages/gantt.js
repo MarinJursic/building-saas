@@ -10,7 +10,7 @@ export default function gantt() {
     <div className={styles.main} style={{ overflowX: "hidden" }}>
       <Head>
         <title>Gantt</title>
-        <meta name="description" content="Dvi kosulje ez" />
+        <meta name="description" content="Home Builders Web Application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <GanttMain />

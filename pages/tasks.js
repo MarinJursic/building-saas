@@ -8,7 +8,7 @@ function tasks() {
     <div className={styles.main} style={{ height: "100%" }}>
       <Head>
         <title>Tasks</title>
-        <meta name="description" content="Dvi kosulje ez" />
+        <meta name="description" content="Home Builders Web Application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Kanban />
